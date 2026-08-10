@@ -1,4 +1,4 @@
 library(testthat)
-library(ggicon)
+library(ggicons)
 
-test_check("ggicon")
+test_check("ggicons")
