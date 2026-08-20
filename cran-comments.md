@@ -1,3 +1,5 @@
+There are presently no associated DOIs for the methods implemented in this package.
+
 ## Test environments
 
 * GitHub Actions (ubuntu-16.04): devel, release, oldrel, 3.5, 3.4, 3.3
