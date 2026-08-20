@@ -1,0 +1,19 @@
+url: https://pkg.mitchelloharawild.com/ggicons/
+template:
+  bootstrap: 5
+
+reference:
+- title: Geom
+  desc: Draw icons in place of points.
+  contents:
+  - geom_icon
+- title: Scales
+  desc: Map icon data to the `icon` aesthetic.
+  contents:
+  - scale_icon_identity
+  - scale_icon_manual
+- title: Legend key
+  desc: Draw icons in legend keys.
+  contents:
+  - draw_key_icon
+
