@@ -4,14 +4,32 @@ Version: 0.0.0.9000
 Authors@R: 
     person("Mitchell", "O'Hara-Wild", , "mail@mitchelloharawild.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-6729-7695"))
-Description: Provides geometries for visualising data using icons in
-    'ggplot2'.
+Description: Provides icon geometries for 'ggplot2', using vector icon
+    sets from the 'icons' package. geom_icon() draws an icon per row in
+    place of a point, styled with the usual colour, size, alpha and angle
+    aesthetics. Icon data is passed straight through with
+    scale_icon_identity(), or mapped from discrete values with
+    scale_icon_manual(). Icons also appear in legend keys, as
+    fixed-position markers with annotation_icon(), and as axis, strip and
+    legend labels via the element_icon() theme element.
 License: MIT + file LICENSE
-URL: https://github.com/mitchelloharawild/ggicons
+URL: https://pkg.mitchelloharawild.com/ggicons/, https://github.com/mitchelloharawild/ggicons
 BugReports: https://github.com/mitchelloharawild/ggicons/issues
-Suggests: 
+Imports:
+    cli,
+    ggplot2 (>= 4.0.0),
+    grid,
+    grImport2,
+    icons,
+    rlang (>= 1.1.0),
+    rsvg,
+    scales
+Suggests:
+    spelling,
     testthat (>= 3.0.0)
+Config/roxygen2/version: 8.0.0
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-Config/roxygen2/version: 8.0.0
+RoxygenNote: 8.0.0
+Language: en-GB
