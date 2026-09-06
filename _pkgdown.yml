@@ -20,4 +20,8 @@ reference:
   desc: Add a fixed-position icon to a plot.
   contents:
   - annotation_icon
+- title: Theme
+  desc: Draw axis, strip and legend labels as icons.
+  contents:
+  - element_icon
 
