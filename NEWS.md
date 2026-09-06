@@ -8,3 +8,5 @@ Initial CRAN submission.
 * Added `draw_key_icon()`, the default `geom_icon()` legend key glyph.
 * Added `scale_icon_identity()` and `scale_icon_manual()`, plus 
   `scale_type.icon()` method so `aes(icon = ...)` picks a sensible scale.
+* Added `annotation_icon()`, for drawing one or more icons at fixed
+  positions, recycled the way `annotate()` recycles its arguments.

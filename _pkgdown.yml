@@ -16,4 +16,8 @@ reference:
   desc: Draw icons in legend keys.
   contents:
   - draw_key_icon
+- title: Annotations
+  desc: Add a fixed-position icon to a plot.
+  contents:
+  - annotation_icon
 

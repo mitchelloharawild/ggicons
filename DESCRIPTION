@@ -23,7 +23,8 @@ Imports:
     icons,
     rlang (>= 1.1.0),
     rsvg,
-    scales
+    scales,
+    vctrs
 Suggests:
     spelling,
     testthat (>= 3.0.0)
