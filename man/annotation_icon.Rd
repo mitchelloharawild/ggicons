@@ -42,9 +42,9 @@ A ggplot2 layer.
 \description{
 \code{annotation_icon()} draws one or more icons at fixed \verb{(x, y)} positions,
 the \code{icon} analogue of \code{\link[ggplot2:annotation_custom]{ggplot2::annotation_custom()}} /
-\code{\link[ggplot2:annotation_raster]{ggplot2::annotation_raster()}} — a single call that adds icons directly,
+\code{\link[ggplot2:annotation_raster]{ggplot2::annotation_raster()}}: a single call that adds icons directly,
 without a data frame or \code{aes()} mapping. Unlike those, though,
-\code{annotation_icon()} \emph{does} train the panel's position scales: a
+\code{annotation_icon()} \emph{does} train the panel's position scales, since a
 fixed-position icon is more usefully treated like a point annotation
 (e.g. \code{\link[ggplot2:annotate]{ggplot2::annotate()}}) than like an arbitrary grob pinned to the
 panel's corners, so placing one outside the data's range still expands
@@ -61,19 +61,19 @@ length, so a single call can place several icons at once (e.g.
 understands as aesthetics, but as plain arguments instead:
 \itemize{
 \item \strong{\code{icon}} (required): an icon vector from the
-\href{https://github.com/mitchelloharawild/icons}{icons} package — an icon
+\href{https://github.com/mitchelloharawild/icons}{icons} package, an icon
 object (e.g. from \code{\link[icons:read_icon]{icons::read_icon()}} or
 \code{icons::fontawesome$solid$rocket}) or an \code{\link[icons:icon_find]{icons::icon_find()}} result.
 \item \code{x}, \code{y}: the position(s) to draw at, in data coordinates.
 \item \code{colour}/\code{fill}: both map to the icon's single fill colour (icons
-don't have a separate border) — \code{fill} wins when both are set.
+don't have a separate border); \code{fill} wins when both are set.
 \item \code{alpha}
 \item \code{size}: the icon's width/height, in \code{size.unit} (default millimetres).
 \item \code{angle}: rotation, in degrees.
 }
 
-\code{stroke}/\code{linewidth} don't apply — icons are filled shapes, not framed
-ones.
+\code{stroke}/\code{linewidth} don't apply, since icons are filled shapes, not
+framed ones.
 }
 
 \examples{

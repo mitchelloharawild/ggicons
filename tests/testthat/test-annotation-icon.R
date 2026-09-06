@@ -5,7 +5,7 @@ test_that("annotation_icon() builds and draws without error for a single icon", 
 
   expect_no_error(b <- ggplot2::ggplot_build(p))
   expect_no_error(grid::grid.draw(ggplot2::ggplotGrob(p)))
-  expect_s3_class(b$data[[2]]$icon, "icon_vec")
+  expect_s3_class(b$data[[2]]$icon, "icons")
   # colour/fill/size/alpha/angle are mapped as aesthetics for
   # vectorisation, but must come out *literally* -- not run through
   # ggplot2's default scale for that aesthetic (e.g. size's default

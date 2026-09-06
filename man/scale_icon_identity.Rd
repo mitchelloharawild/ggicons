@@ -31,10 +31,9 @@ A ggplot2 scale.
 \description{
 \code{scale_icon_identity()} is for the common case where the \code{icon}
 aesthetic is already mapped to icon values (an icon vector from the
-\href{https://github.com/mitchelloharawild/icons}{icons} package) — the data
-\emph{is} the thing to draw, not an abstract value to look up in a palette, so
-it's passed through unchanged. No legend is drawn by default, as with
-\code{\link[ggplot2:scale_shape_identity]{ggplot2::scale_shape_identity()}}.
+\href{https://github.com/mitchelloharawild/icons}{icons} package), so the data
+is passed through unchanged rather than looked up in a palette. No legend
+is drawn by default, as with \code{\link[ggplot2:scale_shape_identity]{ggplot2::scale_shape_identity()}}.
 }
 \details{
 Requesting a legend (\code{guide = "legend"}) isn't supported here: ggplot2's

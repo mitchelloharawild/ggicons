@@ -1,34 +1,27 @@
 #' Discrete scale for the icon aesthetic
 #'
 #' Tells ggplot2's scale machinery that an icon vector from the
-#' [icons](https://github.com/mitchelloharawild/icons) package — a single
-#' icon object or an [icons::icon_find()] result mapped directly with
-#' `aes(icon = ...)` — is discrete, the same way a bare `factor`/`character`
-#' column already is. Without this, `scale_type.default()` warns and
-#' defaults to continuous, which is wrong for icons.
+#' [icons](https://github.com/mitchelloharawild/icons) package is discrete,
+#' the same way a bare `factor`/`character` column already is. Without this,
+#' `scale_type.default()` warns and defaults to continuous, which is wrong
+#' for icons.
 #'
 #' This purely silences that warning: `icon` has no automatic discrete
-#' palette (see [scale_icon_manual()]), so no `scale_icon_discrete()` is
-#' ever picked up automatically either way.
+#' palette (see [scale_icon_manual()]).
 #'
 #' @param x A vector mapped to an aesthetic.
 #' @return `"discrete"`.
 #' @exportS3Method ggplot2::scale_type
 #' @keywords internal
-scale_type.icon <- function(x) "discrete"
-
-#' @rdname scale_type.icon
-#' @exportS3Method ggplot2::scale_type
-scale_type.icon_vec <- function(x) "discrete"
+scale_type.icons <- function(x) "discrete"
 
 #' Use icon values as-is
 #'
 #' `scale_icon_identity()` is for the common case where the `icon`
 #' aesthetic is already mapped to icon values (an icon vector from the
-#' [icons](https://github.com/mitchelloharawild/icons) package) — the data
-#' *is* the thing to draw, not an abstract value to look up in a palette, so
-#' it's passed through unchanged. No legend is drawn by default, as with
-#' [ggplot2::scale_shape_identity()].
+#' [icons](https://github.com/mitchelloharawild/icons) package), so the data
+#' is passed through unchanged rather than looked up in a palette. No legend
+#' is drawn by default, as with [ggplot2::scale_shape_identity()].
 #'
 #' Requesting a legend (`guide = "legend"`) isn't supported here: ggplot2's
 #' discrete scale training only recognises character/factor data, not icon
@@ -56,17 +49,16 @@ scale_icon_identity <- function(name = ggplot2::waiver(), ...,
 #' Map discrete values to icons manually
 #'
 #' `scale_icon_manual()` maps a discrete data value (e.g. a category
-#' column) to an icon, using a manually-specified lookup — the `icon`
+#' column) to an icon, using a manually-specified lookup, the `icon`
 #' analogue of [ggplot2::scale_shape_manual()]. There's no automatic
-#' discrete palette for icons (no meaningful "next icon" the way there's a
-#' default colour or shape), so `values` is required.
+#' discrete palette for icons, so `values` is required.
 #'
 #' @inheritParams ggplot2::scale_shape_manual
 #' @param values An icon vector from the
 #'   [icons](https://github.com/mitchelloharawild/icons) package, the same
 #'   length as the number of levels to map. Unlike most `scale_*_manual()`
-#'   counterparts, `values` can't be named by level — icon vectors don't
-#'   support names — so it's matched positionally against the sorted data
+#'   counterparts, `values` can't be named by level, since icon vectors don't
+#'   support names, so it's matched positionally against the sorted data
 #'   levels; use `breaks` to map against a different order.
 #'
 #' @return A ggplot2 scale.

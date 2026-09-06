@@ -18,7 +18,7 @@ test_that("geom_icon() builds and draws without error for icon vectors", {
 
   # Icon vectors are resolved to SVG paths at draw time (see draw_panel),
   # not baked into the built layer data.
-  expect_s3_class(b$data[[1]]$icon, "icon_vec")
+  expect_s3_class(b$data[[1]]$icon, "icons")
 })
 
 test_that("geom_icon() sees icons after scale mapping, not before", {
@@ -35,7 +35,7 @@ test_that("geom_icon() sees icons after scale mapping, not before", {
     scale_icon_manual(values = vals)
 
   expect_no_error(b <- ggplot2::ggplot_build(p))
-  expect_s3_class(b$data[[1]]$icon, "icon_vec")
+  expect_s3_class(b$data[[1]]$icon, "icons")
   expect_no_error(grid::grid.draw(ggplot2::ggplotGrob(p)))
 })
 

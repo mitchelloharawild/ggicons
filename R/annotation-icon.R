@@ -2,9 +2,9 @@
 #'
 #' `annotation_icon()` draws one or more icons at fixed `(x, y)` positions,
 #' the `icon` analogue of [ggplot2::annotation_custom()] /
-#' [ggplot2::annotation_raster()] — a single call that adds icons directly,
+#' [ggplot2::annotation_raster()]: a single call that adds icons directly,
 #' without a data frame or `aes()` mapping. Unlike those, though,
-#' `annotation_icon()` *does* train the panel's position scales: a
+#' `annotation_icon()` *does* train the panel's position scales, since a
 #' fixed-position icon is more usefully treated like a point annotation
 #' (e.g. [ggplot2::annotate()]) than like an arbitrary grob pinned to the
 #' panel's corners, so placing one outside the data's range still expands
@@ -19,18 +19,18 @@
 #' understands as aesthetics, but as plain arguments instead:
 #'
 #' - **`icon`** (required): an icon vector from the
-#'   [icons](https://github.com/mitchelloharawild/icons) package — an icon
+#'   [icons](https://github.com/mitchelloharawild/icons) package, an icon
 #'   object (e.g. from [icons::read_icon()] or
 #'   `icons::fontawesome$solid$rocket`) or an [icons::icon_find()] result.
 #' - `x`, `y`: the position(s) to draw at, in data coordinates.
 #' - `colour`/`fill`: both map to the icon's single fill colour (icons
-#'   don't have a separate border) — `fill` wins when both are set.
+#'   don't have a separate border); `fill` wins when both are set.
 #' - `alpha`
 #' - `size`: the icon's width/height, in `size.unit` (default millimetres).
 #' - `angle`: rotation, in degrees.
 #'
-#' `stroke`/`linewidth` don't apply — icons are filled shapes, not framed
-#' ones.
+#' `stroke`/`linewidth` don't apply, since icons are filled shapes, not
+#' framed ones.
 #'
 #' @param icon An icon vector from the
 #'   [icons](https://github.com/mitchelloharawild/icons) package. Character
@@ -60,51 +60,25 @@
 #'   )
 annotation_icon <- function(icon, x, y, colour = "black", fill = NA, size = 6,
                              alpha = NA, angle = 0, size.unit = "mm") {
-  # Validated up front, before anything else is built: an opaque failure
-  # from icons::icon_path() or vctrs' recycling machinery three calls deep
-  # is a lot less useful than catching a bad `icon` argument right here,
-  # pointing straight back at annotation_icon()'s own call (cli_abort()'s
-  # default `call` already does that -- no need to pass one). Same
-  # inherits() test as check_icon_aes() (see icon-check.R), but with
-  # wording for a directly-called constructor rather than a mapped
-  # aesthetic -- check_icon_aes()'s hint about scale_icon_manual() doesn't
-  # apply here, there's no scale involved.
-  if (!(inherits(icon, "icon_vec") || inherits(icon, "icon"))) {
+  # Validate icon up front so a bad argument is reported here, not as an
+  # opaque failure deep inside icon_path() or vctrs' recycling machinery.
+  if (!inherits(icon, "icons")) {
     cli::cli_abort(
       "{.arg icon} must be an icon vector from the {.pkg icons} package (e.g. {.code icons::fontawesome$solid$rocket}), not {.obj_type_friendly {icon}}."
     )
   }
 
-  # A single `icon` object (as opposed to an `icon_vec` built with `c()`,
-  # e.g. `icons::icon_find()`'s result) is a scalar S3 list, not a vctrs
-  # vector -- data.frame()/vec_recycle_common() can't treat it as a
-  # length-1 column until it's coerced to `icon_vec`. `c()` on an
-  # already-`icon_vec` value is a no-op.
-  icon <- c(icon)
-
-  # icon/x/y/colour/fill/size/alpha/angle are recycled to a common length
-  # here (vctrs is already a transitive dependency via the icons package),
-  # so e.g. two icons at two positions, or one icon repeated at several
-  # positions, both work from a single call.
+  # Recycle all arguments to a common length, so e.g. two icons at two
+  # positions, or one icon repeated at several positions, both work.
   rec <- vctrs::vec_recycle_common(
     icon = icon, x = x, y = y, colour = colour, fill = fill,
     size = size, alpha = alpha, angle = angle
   )
   data <- as.data.frame(rec)
 
-  # colour/fill/size/alpha/angle are mapped as aesthetics below (not fixed
-  # layer params) so that a single call can vary them per icon, the same as
-  # x/y. Unlike x/y, though, these have a *default* scale in stock ggplot2
-  # (e.g. a discrete hue palette for colour, a continuous area scale for
-  # size) that would silently reinterpret literal values passed here --
-  # e.g. colour = "steelblue" would come out as whatever hue the scale
-  # happens to assign it, not steelblue itself, and if the plot already
-  # maps colour elsewhere, this layer's values would be folded into (and
-  # perturb) that shared scale. Wrapping them in base::I() marks them
-  # "AsIs", which ggplot2's find_scale() special-cases to skip scale
-  # selection entirely -- the same effectively-identity treatment `icon`
-  # already gets for a different reason (no default `scale_icon_*()`
-  # exists to find; see icon-check.R).
+  # Mark these AsIs so ggplot2 skips scale selection and uses the literal
+  # values, rather than reinterpreting them through a default colour/size
+  # scale (which would also perturb any shared scale used elsewhere).
   data$colour <- I(data$colour)
   data$fill <- I(data$fill)
   data$size <- I(data$size)
@@ -113,11 +87,8 @@ annotation_icon <- function(icon, x, y, colour = "black", fill = NA, size = 6,
 
   ggplot2::layer(
     data = data,
-    # x/y are mapped as real aesthetics, not fixed at Inf/panel corners the
-    # way annotation_custom()/annotation_raster() work -- so, deliberately,
-    # they *do* train the panel's position scales, the same as
-    # annotate("point", ...) does. That's more useful for a fixed-position
-    # icon than annotation_custom()'s scale-invariant placement would be.
+    # x/y are mapped as real aesthetics, deliberately training the panel's
+    # position scales the same as annotate("point", ...) does.
     mapping = ggplot2::aes(
       x = x, y = y, icon = icon, colour = colour, fill = fill,
       alpha = alpha, size = size, angle = angle

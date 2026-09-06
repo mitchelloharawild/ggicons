@@ -20,7 +20,7 @@ Imports:
     ggplot2 (>= 4.0.0),
     grid,
     grImport2,
-    icons,
+    icons (>= 1.0.0),
     rlang (>= 1.1.0),
     rsvg,
     scales,

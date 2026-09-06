@@ -1,6 +1,6 @@
-test_that("scale_type.icon() and scale_type.icon_vec() report discrete", {
-  expect_identical(scale_type.icon(icons::fontawesome$solid$rocket), "discrete")
-  expect_identical(scale_type.icon_vec(icons::icon_find("rocket")), "discrete")
+test_that("scale_type.icons() reports discrete", {
+  expect_identical(scale_type.icons(icons::fontawesome$solid$rocket), "discrete")
+  expect_identical(scale_type.icons(icons::icon_find("rocket")), "discrete")
 })
 
 test_that("scale_icon_identity() passes icon vectors through unchanged", {

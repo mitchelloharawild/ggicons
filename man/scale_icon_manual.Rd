@@ -63,8 +63,8 @@ notation.
 \item{values}{An icon vector from the
 \href{https://github.com/mitchelloharawild/icons}{icons} package, the same
 length as the number of levels to map. Unlike most \verb{scale_*_manual()}
-counterparts, \code{values} can't be named by level — icon vectors don't
-support names — so it's matched positionally against the sorted data
+counterparts, \code{values} can't be named by level, since icon vectors don't
+support names, so it's matched positionally against the sorted data
 levels; use \code{breaks} to map against a different order.}
 
 \item{breaks}{One of:
@@ -83,10 +83,9 @@ A ggplot2 scale.
 }
 \description{
 \code{scale_icon_manual()} maps a discrete data value (e.g. a category
-column) to an icon, using a manually-specified lookup — the \code{icon}
+column) to an icon, using a manually-specified lookup, the \code{icon}
 analogue of \code{\link[ggplot2:scale_shape_manual]{ggplot2::scale_shape_manual()}}. There's no automatic
-discrete palette for icons (no meaningful "next icon" the way there's a
-default colour or shape), so \code{values} is required.
+discrete palette for icons, so \code{values} is required.
 }
 \examples{
 library(ggplot2)
