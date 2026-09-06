@@ -5,10 +5,11 @@ the `icon` analogue of
 [`ggplot2::annotation_custom()`](https://ggplot2.tidyverse.org/reference/annotation_custom.html)
 /
 [`ggplot2::annotation_raster()`](https://ggplot2.tidyverse.org/reference/annotation_raster.html):
-a single call that adds icons directly, without a data frame or `aes()`
-mapping. Unlike those, though, `annotation_icon()` *does* train the
-panel's position scales, since a fixed-position icon is more usefully
-treated like a point annotation (e.g.
+a single call that adds icons directly, without a data frame or
+[`aes()`](https://ggplot2.tidyverse.org/reference/aes.html) mapping.
+Unlike those, though, `annotation_icon()` *does* train the panel's
+position scales, since a fixed-position icon is more usefully treated
+like a point annotation (e.g.
 [`ggplot2::annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html))
 than like an arbitrary grob pinned to the panel's corners, so placing
 one outside the data's range still expands the axes to fit it.
