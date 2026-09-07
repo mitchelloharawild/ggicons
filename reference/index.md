@@ -13,19 +13,24 @@ Draw icons as a plot layer.
 
 ## Scales
 
-Map icon data to the `icon` aesthetic.
+Map icon data to the `icon` aesthetic, and the pictogram `value`
+aesthetic.
 
 - [`scale_icon_identity()`](https://pkg.mitchelloharawild.com/ggicons/reference/scale_icon_identity.md)
   : Use icon values as-is
 - [`scale_icon_manual()`](https://pkg.mitchelloharawild.com/ggicons/reference/scale_icon_manual.md)
   : Map discrete values to icons manually
+- [`scale_value_continuous()`](https://pkg.mitchelloharawild.com/ggicons/reference/scale_value_continuous.md)
+  : Continuous scale for the pictogram value aesthetic
 
-## Legend key
+## Guides
 
-Draw icons in legend keys.
+Legends for icon layers.
 
 - [`draw_key_icon()`](https://pkg.mitchelloharawild.com/ggicons/reference/draw_key_icon.md)
   : Legend key glyph: an icon
+- [`guide_pictogram()`](https://pkg.mitchelloharawild.com/ggicons/reference/guide_pictogram.md)
+  : Pictogram value guide
 
 ## Annotations
 

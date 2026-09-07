@@ -1,12 +1,11 @@
 # Pictograms
 
 `geom_pictogram()` draws a value as a grid of repeated icons, some
-fraction of them in a distinct "filled" style - a single-row rating
-widget, a square waffle/percentage chart, and a growing isotype-style
-unit chart are all this geom with different
-[`stat_pictogram()`](https://pkg.mitchelloharawild.com/ggicons/reference/stat_pictogram.md)
-grid params. See that page for how `n`/`nrow`/`ncol`/`symbol_value`
-combine to pick the grid shape and fill count.
+fraction of them filled in and the rest left faded. The same geom
+produces a single-row rating widget, a waffle/percentage chart, or a
+growing isotype-style unit chart, depending on the grid arguments
+(`n`/`nrow`/`ncol`/`symbol_value`) passed to
+[`stat_pictogram()`](https://pkg.mitchelloharawild.com/ggicons/reference/stat_pictogram.md).
 
 ## Usage
 
@@ -20,7 +19,8 @@ geom_pictogram(
   n = NULL,
   nrow = NULL,
   ncol = NULL,
-  symbol_value = 1,
+  symbol_value = NULL,
+  n_target = 20,
   flow = "row",
   size.unit = "mm",
   spacing = 0.2,
@@ -148,12 +148,24 @@ geom_pictogram(
 - nrow, ncol:
 
   Grid shape. Set at most one; the other is derived to wrap the slots.
-  Both `NULL` wraps to a single row/column - see Orientation for which.
+  Both `NULL` wraps to a single row/column; see Orientation for which.
 
 - symbol_value:
 
-  The data value one slot represents. Defaults to `1`, i.e. `value` is
-  already a slot count.
+  The data value one slot represents. `NULL` (the default) picks one
+  automatically: `1` in fixed-grid mode (`value` is already a slot
+  count, e.g. a percentage out of `n = 100`), or, in growing mode, the
+  smallest "nice" round number (1, 2 or 5 times a power of ten) that
+  keeps the layer's largest value to around `n_target` icons; see that
+  argument. Set explicitly to turn auto-picking off.
+
+- n_target:
+
+  In growing mode, roughly how many icons deep the growing dimension
+  should get for the layer's largest value, when `symbol_value` is
+  picked automatically. Turn this up for a finer-grained chart (more,
+  smaller icons), down for a coarser one (fewer, bigger icons). Ignored
+  if `symbol_value` is set explicitly, or in fixed-grid mode.
 
 - flow:
 
@@ -164,18 +176,11 @@ geom_pictogram(
 
   The unit `size` is interpreted in, as in
   [`geom_icon()`](https://pkg.mitchelloharawild.com/ggicons/reference/geom_icon.md).
-  Also the unit auto-fit sizing computes in, when `size` is left at its
-  default (`NA`): the grid then grows or shrinks to use as much of its
-  available space as it can without overflowing - each pictogram's own
-  share of the panel on an axis you mapped (the same way
+  Left at its default (`NA`), `size` instead auto-fits: each pictogram
+  grows or shrinks to fill its own share of the panel, the way
   [`geom_bar()`](https://ggplot2.tidyverse.org/reference/geom_bar.html)
-  derives bar width from
-  [`ggplot2::resolution()`](https://ggplot2.tidyverse.org/reference/resolution.html)),
-  full panel height/width on one
-  [`stat_pictogram()`](https://pkg.mitchelloharawild.com/ggicons/reference/stat_pictogram.md)
-  left unmapped. Set `size` to a number to opt back out to a fixed
-  physical size, as in
-  [`geom_icon()`](https://pkg.mitchelloharawild.com/ggicons/reference/geom_icon.md).
+  derives bar width. Set `size` to a number to opt out to a fixed
+  physical size.
 
 - spacing:
 
@@ -184,17 +189,14 @@ geom_pictogram(
 - hjust, vjust:
 
   Where the grid sits relative to `(x, y)`, as a fraction of its
-  width/height - `0.5` centres it, `0`/`1` anchor an edge, the way
-  [`geom_bar()`](https://ggplot2.tidyverse.org/reference/geom_bar.html)'s
-  bars sit on their baseline. Default (`NULL`) follows
+  width/height: `0.5` centres it, `0`/`1` anchor an edge. Usually left
+  at the default (`NULL`), which follows
   [`stat_pictogram()`](https://pkg.mitchelloharawild.com/ggicons/reference/stat_pictogram.md)'s
-  orientation: `0.5` on an axis you mapped, `0` on one you left
-  unmapped - anchored to that edge of the plot panel itself, not a data
-  value, since an unmapped axis gets no position scale at all. So
-  leaving `y` out of
+  orientation: centred on an axis you mapped, anchored to the panel edge
+  on one you left unmapped. So leaving `y` out of
   [`aes()`](https://ggplot2.tidyverse.org/reference/aes.html) draws a
-  column chart, grown up from the bottom of the panel, with no extra
-  arguments, and leaving `x` out draws a horizontal bar from the left.
+  column chart growing up from the bottom, and leaving `x` out draws a
+  bar growing from the left.
 
 - empty.colour, empty.alpha:
 
@@ -232,29 +234,27 @@ A ggplot2 layer.
 `geom_pictogram()` understands the following aesthetics (`value` and
 `icon` are required):
 
-- `x`, `y`: the grid's anchor position, justified by `hjust`/`vjust`.
-  Neither is required on its own - see
+- `x`, `y`: the grid's anchor position. Leaving one out draws a
+  bar/column chart instead of a fixed-position grid; see
   [`stat_pictogram()`](https://pkg.mitchelloharawild.com/ggicons/reference/stat_pictogram.md)'s
-  Orientation section for what leaving one out draws instead.
+  Orientation section.
 
-- **`value`**: the magnitude a pictogram represents; see
+- **`value`**: the magnitude a pictogram represents.
   [`stat_pictogram()`](https://pkg.mitchelloharawild.com/ggicons/reference/stat_pictogram.md)
-  for how it's turned into a filled slot count.
+  turns it into a filled slot count using `symbol_value`, the amount one
+  icon stands for. Also drives an automatic
+  [`guide_pictogram()`](https://pkg.mitchelloharawild.com/ggicons/reference/guide_pictogram.md)
+  legend spelling that ratio out; turn it off with
+  `guides(value = "none")`.
 
 - **`icon`**: the icon drawn in every slot, filled or empty (as in
   [`geom_icon()`](https://pkg.mitchelloharawild.com/ggicons/reference/geom_icon.md)).
 
-- `colour`/`fill`: the *filled*-slot colour (as in
-  [`geom_icon()`](https://pkg.mitchelloharawild.com/ggicons/reference/geom_icon.md));
-  empty slots use `empty.colour` instead.
+- `colour`/`fill`: the filled-slot colour; empty slots use
+  `empty.colour` instead.
 
-- `alpha`, `angle`: as in
+- `alpha`, `angle`, `size`: as in
   [`geom_icon()`](https://pkg.mitchelloharawild.com/ggicons/reference/geom_icon.md).
-
-- `size`: as in
-  [`geom_icon()`](https://pkg.mitchelloharawild.com/ggicons/reference/geom_icon.md),
-  but defaults (`NA`) to auto-fit instead of a fixed number - see
-  `size.unit`.
 
 `geom_pictogram()` understands the following aesthetics. Required
 aesthetics are displayed in bold and defaults are displayed for optional
@@ -277,7 +277,8 @@ Learn more about setting these aesthetics in
 ## See also
 
 [`stat_pictogram()`](https://pkg.mitchelloharawild.com/ggicons/reference/stat_pictogram.md),
-[`geom_icon()`](https://pkg.mitchelloharawild.com/ggicons/reference/geom_icon.md)
+[`geom_icon()`](https://pkg.mitchelloharawild.com/ggicons/reference/geom_icon.md),
+[`guide_pictogram()`](https://pkg.mitchelloharawild.com/ggicons/reference/guide_pictogram.md)
 
 ## Examples
 
@@ -285,31 +286,34 @@ Learn more about setting these aesthetics in
 library(ggplot2)
 library(icons)
 
-# single-row rating: 5 slots, 3 filled
-ggplot(NULL, aes(y = "Rating", value = 3)) +
-  geom_pictogram(icon = fontawesome$solid$star, n = 5, colour = "goldenrod")
-#> Error: ✖ The fontawesome icon library is not yet installed.
-#> ℹ Install it with `download_fontawesome()`.
-
 # 10x10 waffle: 37%
 ggplot(NULL, aes(x = "Proportion", value = 37)) +
   geom_pictogram(icon = fontawesome$solid$square, n = 100, nrow = 10)
 #> Error: ✖ The fontawesome icon library is not yet installed.
 #> ℹ Install it with `download_fontawesome()`.
 
+# single-row rating: 5 slots, 3 filled.
+# The legend has been switched off with `guides(value = "none")`
+ggplot(NULL, aes(y = "Rating", value = 3)) +
+  geom_pictogram(icon = fontawesome$solid$star, n = 5, colour = "goldenrod") +
+  guides(value = "none")
+#> Error: ✖ The fontawesome icon library is not yet installed.
+#> ℹ Install it with `download_fontawesome()`.
+
 # growing isotype chart: two categories, each sized to its own value
 pets <- data.frame(animal = c("Cat", "Dog"), count = c(23, 15))
 ggplot(pets, aes(animal, y = "Pet", value = count, icon = animal, colour = animal)) +
-  geom_pictogram(symbol_value = 1, nrow = 5) +
+  geom_pictogram(nrow = 5) +
   scale_icon_manual(values = c(fontawesome$solid$cat, fontawesome$solid$dog))
 #> Error: ✖ The fontawesome icon library is not yet installed.
 #> ℹ Install it with `download_fontawesome()`.
 
-# column chart: no y aesthetic, so each category grows its own column
-# upward from y = 0
-ggplot(pets, aes(animal, value = count, icon = animal, colour = animal)) +
-  geom_pictogram(symbol_value = 5) +
-  scale_icon_manual(values = c(fontawesome$solid$cat, fontawesome$solid$dog))
+# column chart: no y aesthetic, so icons fill like a column geometry
+commutes <- data.frame(mode = c("Bicycle", "Car"), count = c(890, 1230))
+ggplot(commutes, aes(mode, value = count, icon = mode, colour = mode)) +
+  geom_pictogram(ncol = 5) +
+  scale_icon_manual(values = c(fontawesome$solid$bicycle, fontawesome$solid$car)) +
+  labs(value = "commuters")
 #> Error: ✖ The fontawesome icon library is not yet installed.
 #> ℹ Install it with `download_fontawesome()`.
 ```

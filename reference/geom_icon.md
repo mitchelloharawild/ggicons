@@ -167,7 +167,7 @@ A ggplot2 layer.
 `geom_icon()` understands the following aesthetics (`icon` is required):
 
 - **`icon`**: the icon to draw, as an icon vector from the
-  [icons](https://github.com/mitchelloharawild/icons) package — an icon
+  [icons](https://github.com/mitchelloharawild/icons) package: an icon
   object (e.g. from
   [`icons::read_icon()`](https://pkg.mitchelloharawild.com/icons/reference/read_icon.html)
   or `icons::fontawesome$solid$rocket`) or an
@@ -177,7 +177,7 @@ A ggplot2 layer.
 - `x`, `y`
 
 - `colour`/`fill`: both map to the icon's single fill colour (icons
-  don't have a separate border) — `fill` wins when both are set.
+  don't have a separate border); `fill` wins when both are set.
 
 - `alpha`
 
@@ -185,7 +185,7 @@ A ggplot2 layer.
 
 - `angle`: rotation, in degrees.
 
-`stroke`/`linewidth` don't apply — icons are filled shapes, not framed
+`stroke`/`linewidth` don't apply: icons are filled shapes, not framed
 ones.
 
 `geom_icon()` understands the following aesthetics. Required aesthetics

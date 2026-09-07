@@ -180,17 +180,17 @@ the default plot specification, e.g. <code><a href="https://ggplot2.tidyverse.or
 
 
 <p><code>geom_icon()</code> understands the following aesthetics (<code>icon</code> is required):</p><ul><li><p><strong><code>icon</code></strong>: the icon to draw, as an icon vector from the
-<a href="https://github.com/mitchelloharawild/icons" class="external-link">icons</a> package — an icon
+<a href="https://github.com/mitchelloharawild/icons" class="external-link">icons</a> package: an icon
 object (e.g. from <code><a href="https://pkg.mitchelloharawild.com/icons/reference/read_icon.html" class="external-link">icons::read_icon()</a></code> or
 <code>icons::fontawesome$solid$rocket</code>) or an <code><a href="https://pkg.mitchelloharawild.com/icons/reference/icon_find.html" class="external-link">icons::icon_find()</a></code> result.
 Character ids are not resolved; map an actual icon vector.</p></li>
 <li><p><code>x</code>, <code>y</code></p></li>
 <li><p><code>colour</code>/<code>fill</code>: both map to the icon's single fill colour (icons
-don't have a separate border) — <code>fill</code> wins when both are set.</p></li>
+don't have a separate border); <code>fill</code> wins when both are set.</p></li>
 <li><p><code>alpha</code></p></li>
 <li><p><code>size</code>: the icon's width/height, in <code>size.unit</code> (default millimetres).</p></li>
 <li><p><code>angle</code>: rotation, in degrees.</p></li>
-</ul><p><code>stroke</code>/<code>linewidth</code> don't apply — icons are filled shapes, not framed
+</ul><p><code>stroke</code>/<code>linewidth</code> don't apply: icons are filled shapes, not framed
 ones.</p>
 
 <p><code>geom_icon()</code> understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:</p><table class="table table"><tr><td>•</td><td><strong><code><a href="https://ggplot2.tidyverse.org/reference/aes_position.html" class="external-link">x</a></code></strong></td><td></td></tr><tr><td>•</td><td><strong><code><a href="https://ggplot2.tidyverse.org/reference/aes_position.html" class="external-link">y</a></code></strong></td><td></td></tr><tr><td>•</td><td><strong><code>icon</code></strong></td><td></td></tr><tr><td>•</td><td><code><a href="https://ggplot2.tidyverse.org/reference/aes_colour_fill_alpha.html" class="external-link">alpha</a></code></td><td>→ <code>NA</code></td></tr><tr><td>•</td><td><code>angle</code></td><td>→ <code>0</code></td></tr><tr><td>•</td><td><code><a href="https://ggplot2.tidyverse.org/reference/aes_colour_fill_alpha.html" class="external-link">colour</a></code></td><td>→ <code>"black"</code></td></tr><tr><td>•</td><td><code><a href="https://ggplot2.tidyverse.org/reference/aes_colour_fill_alpha.html" class="external-link">fill</a></code></td><td>→ <code>NA</code></td></tr><tr><td>•</td><td><code><a href="https://ggplot2.tidyverse.org/reference/aes_group_order.html" class="external-link">group</a></code></td><td>→ inferred</td></tr><tr><td>•</td><td><code><a href="https://ggplot2.tidyverse.org/reference/aes_linetype_size_shape.html" class="external-link">size</a></code></td><td>→ <code>6</code></td></tr></table><p>Learn more about setting these aesthetics in <code><a href="https://ggplot2.tidyverse.org/articles/ggplot2-specs.html" class="external-link">vignette("ggplot2-specs")</a></code>.</p>

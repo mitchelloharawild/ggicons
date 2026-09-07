@@ -3,10 +3,7 @@
 `stat_pictogram()` turns one row of data (an anchor position and a
 `value`) into one row per icon slot in a grid, ready for
 [`geom_pictogram()`](https://pkg.mitchelloharawild.com/ggicons/reference/geom_pictogram.md)
-to draw. It's the counting/layout half of a pictogram, the way
-[`ggplot2::stat_count()`](https://ggplot2.tidyverse.org/reference/geom_bar.html)
-is for
-[`ggplot2::geom_bar()`](https://ggplot2.tidyverse.org/reference/geom_bar.html).
+to draw. It's the counting/layout half of a pictogram.
 
 ## Usage
 
@@ -20,7 +17,8 @@ stat_pictogram(
   n = NULL,
   nrow = NULL,
   ncol = NULL,
-  symbol_value = 1,
+  symbol_value = NULL,
+  n_target = 20,
   flow = "row",
   na.rm = FALSE,
   show.legend = NA,
@@ -123,12 +121,24 @@ stat_pictogram(
 - nrow, ncol:
 
   Grid shape. Set at most one; the other is derived to wrap the slots.
-  Both `NULL` wraps to a single row/column - see Orientation for which.
+  Both `NULL` wraps to a single row/column; see Orientation for which.
 
 - symbol_value:
 
-  The data value one slot represents. Defaults to `1`, i.e. `value` is
-  already a slot count.
+  The data value one slot represents. `NULL` (the default) picks one
+  automatically: `1` in fixed-grid mode (`value` is already a slot
+  count, e.g. a percentage out of `n = 100`), or, in growing mode, the
+  smallest "nice" round number (1, 2 or 5 times a power of ten) that
+  keeps the layer's largest value to around `n_target` icons; see that
+  argument. Set explicitly to turn auto-picking off.
+
+- n_target:
+
+  In growing mode, roughly how many icons deep the growing dimension
+  should get for the layer's largest value, when `symbol_value` is
+  picked automatically. Turn this up for a finer-grained chart (more,
+  smaller icons), down for a coarser one (fewer, bigger icons). Ignored
+  if `symbol_value` is set explicitly, or in fixed-grid mode.
 
 - flow:
 
@@ -166,38 +176,30 @@ A ggplot2 layer.
 Two modes, chosen by whether `n` (or both `nrow` and `ncol`) is set:
 
 - **Fixed grid** (`n`, or both `nrow`/`ncol`, given): the grid always
-  has `n` slots; `round(value / symbol_value)` of them are marked filled
+  has `n` slots; `round(value / symbol_value)` of them are filled
   (capped at `n`), the rest empty. This is the
-  waffle-chart/rating-widget shape — proportions vary, the grid
-  footprint doesn't.
+  waffle-chart/rating-widget shape: proportions vary, the grid footprint
+  doesn't.
 
 - **Growing grid** (`n`, `nrow` and `ncol` all left `NULL`, or only one
   of `nrow`/`ncol` given): the grid has exactly
-  `round(value / symbol_value)` slots, all filled — an
-  isotype/unit-chart shape where more icons *is* the value, so the
-  footprint grows with it.
+  `round(value / symbol_value)` slots, all filled. An isotype/unit-chart
+  shape where more icons *is* the value, so the footprint grows with it.
 
-Either way, at most one of `nrow`/`ncol` needs setting; the other wraps
-to fit. With neither set, the grid defaults to a single row, unless
-`x`/`y` asks for a bar/column shape instead - see Orientation below.
+At most one of `nrow`/`ncol` needs setting; the other wraps to fit. With
+neither set, the grid defaults to a single row, unless `x`/`y` asks for
+a bar/column shape instead; see Orientation below.
 
 ## Orientation
 
 `x` and `y` are the grid's anchor, but only `value` is actually
 required. Map both and you get a fixed-position grid, centred on
-`(x, y)` - a waffle chart or rating widget. Leave one unmapped and that
-becomes the growth axis of a bar-style stack, anchored to that edge of
-the plot panel itself rather than to any data value on it (an unmapped
-axis gets no position scale at all - see
-[`geom_pictogram()`](https://pkg.mitchelloharawild.com/ggicons/reference/geom_pictogram.md)'s
-`hjust`/`vjust`), the way
-[`geom_bar()`](https://ggplot2.tidyverse.org/reference/geom_bar.html)
-only requires `x`: `aes(x = category, value = count)` draws a column
-chart, one growing column per category, up from the bottom of the panel;
-`aes(y = category, value = count)` draws a horizontal bar, growing right
-from the left of the panel. With neither `nrow` nor `ncol` set, the
-missing axis is also the one that grows instead of wraps (a single
-column for a column chart, a single row for a bar).
+`(x, y)`: a waffle chart or rating widget. Leave one unmapped and that
+becomes the growth axis of a bar-style stack instead, anchored to that
+edge of the plot panel. `aes(x = category, value = count)` draws a
+column chart, one growing column per category, up from the bottom of the
+panel; `aes(y = category, value = count)` draws a horizontal bar,
+growing right from the left of the panel.
 
 ## See also
 
