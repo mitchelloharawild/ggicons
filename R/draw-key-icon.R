@@ -11,10 +11,12 @@
 #' @export
 draw_key_icon <- function(data, params, size) {
   check_icon_aes(data$icon)
+  key_size <- data$size %||% NA
+  if (is.na(key_size)) key_size <- 6
   icon_grob(
     path = if (is.null(data$icon)) NA_character_ else icons::icon_path(data$icon)[[1]],
     x = 0.5, y = 0.5,
-    size = data$size %||% 6,
+    size = key_size,
     colour = data$colour %||% "black",
     fill = data$fill %||% NA,
     alpha = data$alpha %||% NA,

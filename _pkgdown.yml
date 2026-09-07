@@ -4,9 +4,11 @@ template:
 
 reference:
 - title: Geom
-  desc: Draw icons in place of points.
+  desc: Draw icons as a plot layer.
   contents:
   - geom_icon
+  - geom_pictogram
+  - stat_pictogram
 - title: Scales
   desc: Map icon data to the `icon` aesthetic.
   contents:
