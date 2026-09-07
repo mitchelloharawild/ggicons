@@ -57,9 +57,13 @@ build_icon_geometry <- function(path) {
   # id.lengths is NULL for a single-subpath shape; fill it in explicitly before concatenating.
   id.lengths <- unlist(lapply(shapes, function(s) s$id.lengths %||% length(s$x)))
 
+  scale <- max(xr[2] - xr[1], yr[1] - yr[2])
+  x_mid <- (xr[1] + xr[2]) / 2
+  y_mid <- (yr[1] + yr[2]) / 2
+
   list(
-    x = (x - xr[1]) / (xr[2] - xr[1]) - 0.5,
-    y = (yr[1] - y) / (yr[1] - yr[2]) - 0.5,
+    x = (x - x_mid) / scale,
+    y = (y_mid - y) / scale,
     id.lengths = id.lengths,
     rule = rules
   )
