@@ -27,26 +27,14 @@ check_icon_lookup <- function(icons, call = rlang::caller_env()) {
 #' Theme element: draw labels as icons
 #'
 #' @description
-#' `element_icon()` is a theme element parallel to [ggplot2::element_text()],
-#' for use in `axis.text`/`axis.text.x`/`axis.text.y`, `strip.text`,
-#' `legend.text`, and similar text-drawing theme settings passed to
-#' [ggplot2::theme()]. Any label that matches a name in `icons` is drawn as
-#' the corresponding icon; every other label, and *every* label if `icons`
-#' is left `NULL`, is drawn exactly as [ggplot2::element_text()] would draw
-#' it.
+#' A theme element parallel to [ggplot2::element_text()], for use in
+#' `axis.text`, `strip.text`, `legend.text`, and similar theme settings.
+#' Any label matching a name in `icons` is drawn as that icon; every other
+#' label falls back to plain `element_text()` drawing.
 #'
 #' @details
-#' # How labels are matched to icons
-#' ggplot2's label pipeline (scales, guides, facets) only ever hands theme
-#' elements character label strings, never icon objects directly. So,
-#' unlike [geom_icon()]'s `icon` aesthetic, `element_icon()` is given a
-#' *lookup* from label string to icon, and resolves each label to an icon
-#' (or falls back to text) at draw time, once the actual break/strip/legend
-#' labels are known.
-#'
-#' `icons` must be a **named `list()`** of individual, length-1 icons (e.g.
-#' `icons::fontawesome$solid$rocket`), one entry per label it should
-#' replace:
+#' `icons` is a named `list()` of individual, length-1 icons, one entry per
+#' label to replace:
 #'
 #' ```r
 #' element_icon(icons = list(
@@ -55,54 +43,12 @@ check_icon_lookup <- function(icons, call = rlang::caller_env()) {
 #' ))
 #' ```
 #'
-#' A named multi-icon vector is not accepted, and can't even be built: an
-#' `icons` vector is a `vctrs` record type that cannot carry element
-#' `names()`, and the `icons` package's own combining method (`c.icons()`)
-#' always drops any names passed to it. A named `list()` of individual
-#' icons is the supported way to build this lookup.
-#'
-#' Any label not found in `icons` (including every label, when `icons` is
-#' `NULL`) is drawn by delegating straight to `element_text()`'s own
-#' `element_grob()` method, so hjust/vjust/margin/rotation for the text
-#' side behave exactly as they do for a plain `element_text()`.
-#'
-#' # Sizing
-#' `size` is interpreted the same way `element_text()` interprets it (a
-#' point size). For the icon side, that same numeric value is used as an
-#' absolute size with `size.unit = "pt"`, i.e. an icon's width/height in
-#' points equals `size`. This is a simple, documented convention, not an
-#' attempt at pixel-parity with a font's x-height, so icons will typically
-#' read as a little larger/bolder than the text they replace at the same
-#' `size`. This also differs from [geom_icon()]'s `size` aesthetic, which
-#' defaults to millimetres; themes conventionally size text in points, so
-#' `element_icon()` follows that convention instead.
-#'
-#' # Known limitations
-#' - Only a single fill colour is supported for the icon side (`colour`, no
-#'   separate `fill`), consistent with [geom_icon()].
-#' - `angle` rotates the icon the same number of degrees `element_text()`
-#'   would rotate text, but the `hjust`/`vjust`/`margin` adjustments
-#'   `element_text()` applies to text are not replicated for the icon side;
-#'   icons are always centred at the given `x`/`y`. For axis text in
-#'   particular this means an icon won't shift the way a rotated text label
-#'   would to stay clear of the axis line.
-#' - When a set of breaks/strips mixes matched and unmatched labels, one
-#'   icon grob and one delegated text grob are drawn as sibling children of
-#'   a `gTree`, with no attempt to visually align icon size against the
-#'   surrounding text's line box beyond the `size` convention above.
-#' - `coord_flip()` is manually smoke-tested but not covered by an
-#'   automated test, so worth a second look after any ggplot2 upgrade.
-#'
 #' @param icons A named `list()` of icon objects (see Details), or `NULL`
-#'   (the default) to disable icon substitution entirely, behaving exactly
-#'   like `element_text()`.
-#' @param size Point size for text, and (see Details) the point-equivalent
-#'   width/height for icons.
+#'   (the default) to disable icon substitution.
+#' @param size Point size for text, and the point width/height for icons.
 #' @param colour Colour for text, and the fill colour for icons.
 #' @param inherit.blank See [ggplot2::element_text()].
-#' @param ... Other arguments passed on to [ggplot2::element_text()] (e.g.
-#'   `family`, `face`, `hjust`, `vjust`, `angle`, `lineheight`, `margin`,
-#'   `debug`), used for the text-fallback side of rendering only.
+#' @param ... Other arguments passed on to [ggplot2::element_text()].
 #'
 #' @return An `element_icon` object: a subclass of `element_text` (itself a
 #'   ggplot2 theme element), for use in [ggplot2::theme()].
@@ -139,35 +85,95 @@ element_icon <- function(icons = NULL, ..., size = NULL, colour = NULL,
 # etc.) only exists once grid is actually drawing, not at construction time.
 # `width`/`height` are set eagerly so gtable can size the row/column before
 # makeContent() runs; otherwise the row collapses to zero size.
-element_icon_grob <- function(path, x, y, size, colour, angle, size.unit) {
+#
+# `hjust`/`vjust`/`angle`/`margin`/`margin_x`/`margin_y` carry the same
+# layout inputs element_text()'s own titleGrob() uses -- the `x`/`y` anchor
+# alone isn't enough to reproduce its positioning, so makeContent() below
+# redoes that math for the icon side (see icon_rotate_just()).
+element_icon_grob <- function(path, x, y, size, colour, angle, size.unit,
+                               hjust, vjust, margin, margin_x, margin_y) {
   grid::gTree(
     path = path, x = x, y = y, size = size, colour = colour, angle = angle,
-    size.unit = size.unit,
+    size.unit = size.unit, hjust = hjust, vjust = vjust, margin = margin,
+    margin_x = margin_x, margin_y = margin_y,
     width = grid::unit(max(size), size.unit),
     height = grid::unit(max(size), size.unit),
     cl = "elementiconpath"
   )
 }
 
-# Coerce a position vector (numeric, or a grid::unit) to plain npc numerics.
-# `NULL` (no position supplied, e.g. a legend key glyph) defaults to
-# centred, `n` values of 0.5.
-as_npc <- function(v, convert, n) {
-  if (is.null(v)) {
-    return(rep(0.5, n))
-  }
+# Coerce a position (numeric, or a grid::unit) to plain npc numerics, in the
+# viewport current when this runs (`convert` is grid::convertX/convertY).
+# Callers always supply a concrete value -- defaulting an omitted x/y (e.g.
+# the position orthogonal to an axis, or both for a legend/strip label)
+# happens earlier, in element_grob.element_icon(), via icon_rotate_just().
+as_npc <- function(v, convert) {
   if (!grid::is.unit(v)) {
     v <- grid::unit(v, "npc")
   }
   convert(v, "npc", valueOnly = TRUE)
 }
 
+# Mirrors ggplot2's own (unexported) rotate_just(): swaps hjust/vjust by
+# 90-degree quadrant, so a *default* (unspecified) x/y position, and any
+# margin applied against it, land on the correct side of a rotated label --
+# the same trick element_text()'s titleGrob() uses to size/place the row or
+# column it's drawn into. Kept as a small local copy (same formula, same
+# documented imprecision away from the 0/90/180/270 cardinal angles) rather
+# than calling the unexported ggplot2 internal at run time. `hjust`/`vjust`
+# are assumed already numeric (see element_grob.element_icon()).
+icon_rotate_just <- function(angle, hjust, vjust) {
+  angle <- (angle %||% 0) %% 360
+  case <- findInterval(angle, c(0, 90, 180, 270, 360))
+  switch(case,
+    list(hjust = hjust, vjust = vjust),
+    list(hjust = 1 - vjust, vjust = hjust),
+    list(hjust = 1 - hjust, vjust = 1 - vjust),
+    list(hjust = vjust, vjust = 1 - hjust)
+  )
+}
+
 #' @exportS3Method grid::makeContent
 makeContent.elementiconpath <- function(x) {
+  just <- icon_rotate_just(x$angle, x$hjust, x$vjust)
+
+  anchor_x <- as_npc(x$x, grid::convertX)
+  anchor_y <- as_npc(x$y, grid::convertY)
+
+  # Margins are only added in the direction(s) the caller asked for
+  # (margin_x/margin_y), exactly as element_text()'s titleGrob() does --
+  # e.g. axis.text.x only ever sets margin_y (the gap between the axis line
+  # and the label), never margin_x.
+  if (isTRUE(x$margin_x) && !is.null(x$margin)) {
+    l <- grid::convertWidth(x$margin[4], "npc", valueOnly = TRUE)
+    r <- grid::convertWidth(x$margin[2], "npc", valueOnly = TRUE)
+    anchor_x <- anchor_x - r * just$hjust + l * (1 - just$hjust)
+  }
+  if (isTRUE(x$margin_y) && !is.null(x$margin)) {
+    t <- grid::convertHeight(x$margin[1], "npc", valueOnly = TRUE)
+    b <- grid::convertHeight(x$margin[3], "npc", valueOnly = TRUE)
+    anchor_y <- anchor_y - t * just$vjust + b * (1 - just$vjust)
+  }
+
+  # hjust/vjust shift the icon in its own local (unrotated) frame, then that
+  # offset is rotated about the anchor -- the same order grid's own
+  # textGrob() applies hjust/vjust and rotation in. Unlike the
+  # quadrant-swapped `just` above (only needed to size/place the allocated
+  # row/margin the same way ggplot2 does), this part is exact at every
+  # angle, not just the cardinal ones, since the icon's local box is a
+  # simple size-by-size square with no font metrics to approximate.
+  size_npc_x <- grid::convertWidth(grid::unit(x$size, x$size.unit), "npc", valueOnly = TRUE)
+  size_npc_y <- grid::convertHeight(grid::unit(x$size, x$size.unit), "npc", valueOnly = TRUE)
+  local_dx <- size_npc_x * (0.5 - x$hjust)
+  local_dy <- size_npc_y * (0.5 - x$vjust)
+  rad <- x$angle * pi / 180
+  dx <- local_dx * cos(rad) - local_dy * sin(rad)
+  dy <- local_dx * sin(rad) + local_dy * cos(rad)
+
   grob <- icon_grob(
     path = x$path,
-    x = as_npc(x$x, grid::convertX, length(x$path)),
-    y = as_npc(x$y, grid::convertY, length(x$path)),
+    x = anchor_x + dx,
+    y = anchor_y + dy,
     size = x$size,
     colour = x$colour,
     fill = NA,
@@ -190,17 +196,42 @@ widthDetails.elementicongrob <- function(x) x$width
 #' @exportS3Method grid::heightDetails
 heightDetails.elementicongrob <- function(x) x$height
 
+# Coerce hjust/vjust to numeric, the way ggplot2's own rotate_just() does --
+# element_text() documents these as numeric, but some ggplot2-internal
+# callers still pass "left"/"right"/"top"/"bottom" for certain guide
+# elements, so this stays tolerant of the same inputs.
+as_just_numeric <- function(v, chars) {
+  if (is.character(v)) {
+    out <- match(v, chars) - 1
+    out[is.na(out)] <- 0.5
+    return(out)
+  }
+  v
+}
+
 #' @exportS3Method ggplot2::element_grob
 element_grob.element_icon <- function(element, label = "", x = NULL, y = NULL, ...,
-                                       margin_x = FALSE, margin_y = FALSE) {
+                                       hjust = NULL, vjust = NULL, angle = NULL,
+                                       margin = NULL, margin_x = FALSE, margin_y = FALSE) {
   n <- max(length(label), length(x), length(y))
   if (n == 0L) {
     # No labels to draw at all (e.g. a guide with zero breaks).
     return(grid::nullGrob())
   }
   label <- rep_len(label %||% "", n)
-  if (!is.null(x)) x <- rep_len(x, n)
-  if (!is.null(y)) y <- rep_len(y, n)
+
+  hj <- as_just_numeric(hjust %||% element$hjust %||% 0.5, c("left", "right"))
+  vj <- as_just_numeric(vjust %||% element$vjust %||% 0.5, c("bottom", "top"))
+  ang <- angle %||% element$angle %||% 0
+  mgn <- margin %||% element$margin
+
+  # `x`/`y` may each be omitted (the position orthogonal to an axis, or both
+  # for a legend/strip label) -- default them the way element_text()'s own
+  # titleGrob() does, via the rotated justification, rather than always
+  # centring at npc 0.5 regardless of hjust/vjust/angle.
+  just <- icon_rotate_just(ang, hj, vj)
+  if (is.null(x)) x <- rep(just$hjust, n) else x <- rep_len(x, n)
+  if (is.null(y)) y <- rep(just$vjust, n) else y <- rep_len(y, n)
 
   icon_lookup <- attr(element, "icons")
   icon_idx <- rep(FALSE, n)
@@ -217,12 +248,17 @@ element_grob.element_icon <- function(element, label = "", x = NULL, y = NULL, .
 
     icon_part <- element_icon_grob(
       path = paths,
-      x = if (is.null(x)) NULL else x[icon_idx],
-      y = if (is.null(y)) NULL else y[icon_idx],
+      x = x[icon_idx],
+      y = y[icon_idx],
       size = element$size %||% 11,
       colour = element$colour %||% "black",
-      angle = element$angle %||% 0,
-      size.unit = "pt"
+      angle = ang,
+      size.unit = "pt",
+      hjust = hj,
+      vjust = vj,
+      margin = mgn,
+      margin_x = margin_x,
+      margin_y = margin_y
     )
   }
 
@@ -234,9 +270,13 @@ element_grob.element_icon <- function(element, label = "", x = NULL, y = NULL, .
     text_part <- ggplot2::element_grob(
       text_element,
       label = label[!icon_idx],
-      x = if (is.null(x)) NULL else x[!icon_idx],
-      y = if (is.null(y)) NULL else y[!icon_idx],
+      x = x[!icon_idx],
+      y = y[!icon_idx],
       ...,
+      hjust = hjust,
+      vjust = vjust,
+      angle = angle,
+      margin = margin,
       margin_x = margin_x,
       margin_y = margin_y
     )

@@ -14,15 +14,11 @@ element_icon(
 }
 \arguments{
 \item{icons}{A named \code{list()} of icon objects (see Details), or \code{NULL}
-(the default) to disable icon substitution entirely, behaving exactly
-like \code{element_text()}.}
+(the default) to disable icon substitution.}
 
-\item{...}{Other arguments passed on to \code{\link[ggplot2:element_text]{ggplot2::element_text()}} (e.g.
-\code{family}, \code{face}, \code{hjust}, \code{vjust}, \code{angle}, \code{lineheight}, \code{margin},
-\code{debug}), used for the text-fallback side of rendering only.}
+\item{...}{Other arguments passed on to \code{\link[ggplot2:element_text]{ggplot2::element_text()}}.}
 
-\item{size}{Point size for text, and (see Details) the point-equivalent
-width/height for icons.}
+\item{size}{Point size for text, and the point width/height for icons.}
 
 \item{colour}{Colour for text, and the fill colour for icons.}
 
@@ -33,75 +29,21 @@ An \code{element_icon} object: a subclass of \code{element_text} (itself a
 ggplot2 theme element), for use in \code{\link[ggplot2:theme]{ggplot2::theme()}}.
 }
 \description{
-\code{element_icon()} is a theme element parallel to \code{\link[ggplot2:element_text]{ggplot2::element_text()}},
-for use in \code{axis.text}/\code{axis.text.x}/\code{axis.text.y}, \code{strip.text},
-\code{legend.text}, and similar text-drawing theme settings passed to
-\code{\link[ggplot2:theme]{ggplot2::theme()}}. Any label that matches a name in \code{icons} is drawn as
-the corresponding icon; every other label, and \emph{every} label if \code{icons}
-is left \code{NULL}, is drawn exactly as \code{\link[ggplot2:element_text]{ggplot2::element_text()}} would draw
-it.
+A theme element parallel to \code{\link[ggplot2:element_text]{ggplot2::element_text()}}, for use in
+\code{axis.text}, \code{strip.text}, \code{legend.text}, and similar theme settings.
+Any label matching a name in \code{icons} is drawn as that icon; every other
+label falls back to plain \code{element_text()} drawing.
 }
-\section{How labels are matched to icons}{
-ggplot2's label pipeline (scales, guides, facets) only ever hands theme
-elements character label strings, never icon objects directly. So,
-unlike \code{\link[=geom_icon]{geom_icon()}}'s \code{icon} aesthetic, \code{element_icon()} is given a
-\emph{lookup} from label string to icon, and resolves each label to an icon
-(or falls back to text) at draw time, once the actual break/strip/legend
-labels are known.
-
-\code{icons} must be a \strong{named \code{list()}} of individual, length-1 icons (e.g.
-\code{icons::fontawesome$solid$rocket}), one entry per label it should
-replace:
+\details{
+\code{icons} is a named \code{list()} of individual, length-1 icons, one entry per
+label to replace:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{element_icon(icons = list(
   low = icons::fontawesome$solid$`battery-quarter`,
   high = icons::fontawesome$solid$`battery-full`
 ))
 }\if{html}{\out{</div>}}
-
-A named multi-icon vector is not accepted, and can't even be built: an
-\code{icons} vector is a \code{vctrs} record type that cannot carry element
-\code{names()}, and the \code{icons} package's own combining method (\code{c.icons()})
-always drops any names passed to it. A named \code{list()} of individual
-icons is the supported way to build this lookup.
-
-Any label not found in \code{icons} (including every label, when \code{icons} is
-\code{NULL}) is drawn by delegating straight to \code{element_text()}'s own
-\code{element_grob()} method, so hjust/vjust/margin/rotation for the text
-side behave exactly as they do for a plain \code{element_text()}.
 }
-
-\section{Sizing}{
-\code{size} is interpreted the same way \code{element_text()} interprets it (a
-point size). For the icon side, that same numeric value is used as an
-absolute size with \code{size.unit = "pt"}, i.e. an icon's width/height in
-points equals \code{size}. This is a simple, documented convention, not an
-attempt at pixel-parity with a font's x-height, so icons will typically
-read as a little larger/bolder than the text they replace at the same
-\code{size}. This also differs from \code{\link[=geom_icon]{geom_icon()}}'s \code{size} aesthetic, which
-defaults to millimetres; themes conventionally size text in points, so
-\code{element_icon()} follows that convention instead.
-}
-
-\section{Known limitations}{
-\itemize{
-\item Only a single fill colour is supported for the icon side (\code{colour}, no
-separate \code{fill}), consistent with \code{\link[=geom_icon]{geom_icon()}}.
-\item \code{angle} rotates the icon the same number of degrees \code{element_text()}
-would rotate text, but the \code{hjust}/\code{vjust}/\code{margin} adjustments
-\code{element_text()} applies to text are not replicated for the icon side;
-icons are always centred at the given \code{x}/\code{y}. For axis text in
-particular this means an icon won't shift the way a rotated text label
-would to stay clear of the axis line.
-\item When a set of breaks/strips mixes matched and unmatched labels, one
-icon grob and one delegated text grob are drawn as sibling children of
-a \code{gTree}, with no attempt to visually align icon size against the
-surrounding text's line box beyond the \code{size} convention above.
-\item \code{coord_flip()} is manually smoke-tested but not covered by an
-automated test, so worth a second look after any ggplot2 upgrade.
-}
-}
-
 \examples{
 library(ggplot2)
 
