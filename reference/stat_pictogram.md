@@ -54,6 +54,13 @@ stat_pictogram(
   data. A `function` can be created from a `formula` (e.g.
   `~ head(.x, 10)`).
 
+- geom:
+
+  Override the default connection between `stat_pictogram()` and
+  [`geom_pictogram()`](https://pkg.mitchelloharawild.com/ggicons/reference/geom_pictogram.md).
+  For more information about overriding these connections, see
+  [`ggplot2::layer()`](https://ggplot2.tidyverse.org/reference/layer.html).
+
 - position:
 
   A position adjustment to use on the data for this layer. This can be
@@ -204,3 +211,16 @@ growing right from the left of the panel.
 ## See also
 
 [`geom_pictogram()`](https://pkg.mitchelloharawild.com/ggicons/reference/geom_pictogram.md)
+
+## Examples
+
+``` r
+library(ggplot2)
+
+# bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same
+shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
+
+# only needed directly when pairing with a different geom
+ggplot(NULL, aes(x = "Proportion", value = 37)) +
+  stat_pictogram(geom = "pictogram", icon = shapes$square, n = 100, nrow = 10)
+```

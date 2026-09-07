@@ -91,7 +91,7 @@
 <div class="section level3">
 <h3 id="mapping-data-to-icons">Mapping data to icons<a class="anchor" aria-label="anchor" href="#mapping-data-to-icons"></a>
 </h3>
-<p>If the <code>icon</code> aesthetic is already mapped to icon values, <code><a href="reference/scale_icon_identity.html">scale_icon_identity()</a></code> passes them through unchanged. To map a discrete data column (e.g. a category) to an icon instead, use <code><a href="reference/scale_icon_manual.html">scale_icon_manual()</a></code>. There’s no automatic discrete palette for icons, so <code>values</code> is always required:</p>
+<p>If the <code>icon</code> aesthetic is already mapped to icon values, <code><a href="reference/scale_icon_identity.html">scale_icon_identity()</a></code> passes them through unchanged. To map a discrete data column (e.g. a category) to an icon instead, use <code><a href="reference/scale_icon_manual.html">scale_icon_manual()</a></code>. There’s no automatic discrete palette for icons, so <code>values</code> is always required. Since icon vectors can’t be named, <code>values</code> is matched positionally against the sorted data levels by default; pass <code>limits</code> to match against a different order instead:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">2</span><span class="op">)</span>,</span>
@@ -99,12 +99,18 @@
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, icon <span class="op">=</span> <span class="va">type</span>, colour <span class="op">=</span> <span class="va">type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="reference/geom_icon.html">geom_icon</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/scale_icon_manual.html">scale_icon_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="va">fontawesome</span><span class="op">$</span><span class="va">solid</span><span class="op">$</span><span class="va">rocket</span>,</span>
-<span>    <span class="va">fontawesome</span><span class="op">$</span><span class="va">solid</span><span class="op">$</span><span class="va">star</span>,</span>
-<span>    <span class="va">fontawesome</span><span class="op">$</span><span class="va">solid</span><span class="op">$</span><span class="va">heart</span></span>
-<span>  <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"steelblue"</span>, <span class="st">"goldenrod"</span>, <span class="st">"firebrick"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="reference/scale_icon_manual.html">scale_icon_manual</a></span><span class="op">(</span></span>
+<span>    limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rocket"</span>, <span class="st">"star"</span>, <span class="st">"heart"</span><span class="op">)</span>,</span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>      <span class="va">fontawesome</span><span class="op">$</span><span class="va">solid</span><span class="op">$</span><span class="va">rocket</span>,</span>
+<span>      <span class="va">fontawesome</span><span class="op">$</span><span class="va">solid</span><span class="op">$</span><span class="va">star</span>,</span>
+<span>      <span class="va">fontawesome</span><span class="op">$</span><span class="va">solid</span><span class="op">$</span><span class="va">heart</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span>
+<span>    limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rocket"</span>, <span class="st">"star"</span>, <span class="st">"heart"</span><span class="op">)</span>,</span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>rocket <span class="op">=</span> <span class="st">"steelblue"</span>, star <span class="op">=</span> <span class="st">"goldenrod"</span>, heart <span class="op">=</span> <span class="st">"firebrick"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-scale-icon-manual-1.png" alt="" width="100%"></p>
 <p>Icons drawn with <code><a href="reference/geom_icon.html">geom_icon()</a></code> also appear as their own legend key glyph, via <code><a href="reference/draw_key_icon.html">draw_key_icon()</a></code>, so the legend shows the actual icon shape instead of a generic point.</p>
 </div>

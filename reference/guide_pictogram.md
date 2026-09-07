@@ -113,22 +113,20 @@ layer's own `symbol_value` rather than from the scale's trained breaks.
 
 ``` r
 library(ggplot2)
-library(icons)
 
-# legend reads "\[square\] = 1": each waffle square is one percentage point
-# (the default symbol_value)
+# bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same
+shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
+
+# legend reads "[square] = 1": each square is one percentage point
 ggplot(NULL, aes(x = "Proportion", value = 37)) +
-  geom_pictogram(icon = fontawesome$solid$square, n = 100, nrow = 10) +
+  geom_pictogram(icon = shapes$square, n = 100, nrow = 10) +
   labs(value = "%")
-#> Error: ✖ The fontawesome icon library is not yet installed.
-#> ℹ Install it with `download_fontawesome()`.
+
 
 # a unit chart where each icon is worth 5: the legend spells that out
 pets <- data.frame(animal = c("Cat", "Dog"), count = c(23, 15))
 ggplot(pets, aes(animal, value = count, icon = animal, colour = animal)) +
   geom_pictogram(symbol_value = 5) +
-  scale_icon_manual(values = c(fontawesome$solid$cat, fontawesome$solid$dog)) +
+  scale_icon_manual(values = c(icons::fontawesome$solid$cat, icons::fontawesome$solid$dog)) +
   labs(value = "pets")
-#> Error: ✖ The fontawesome icon library is not yet installed.
-#> ℹ Install it with `download_fontawesome()`.
 ```

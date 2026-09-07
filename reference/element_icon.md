@@ -70,16 +70,27 @@ individual, length-1 icons, one entry per label to replace:
 ``` r
 library(ggplot2)
 
+# bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same
+shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
+cyl_icons <- list(
+  `4` = shapes$circle,
+  `6` = shapes$square,
+  `8` = shapes$triangle
+)
+
+ggplot(mtcars, aes(factor(cyl), mpg)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_icon(icons = cyl_icons, size = 14))
+
+
+# a real icon pack (here, Font Awesome) works the same way
 battery <- list(
   `4` = icons::fontawesome$solid$`battery-quarter`,
   `6` = icons::fontawesome$solid$`battery-half`,
   `8` = icons::fontawesome$solid$`battery-full`
 )
-#> Error: ✖ The fontawesome icon library is not yet installed.
-#> ℹ Install it with `download_fontawesome()`.
 
 ggplot(mtcars, aes(factor(cyl), mpg)) +
   geom_boxplot() +
   theme(axis.text.x = element_icon(icons = battery, size = 14))
-#> Error: object 'battery' not found
 ```

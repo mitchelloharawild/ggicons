@@ -163,3 +163,17 @@ to call it directly. Exported for overriding `guide` or setting explicit
 
 [`guide_pictogram()`](https://pkg.mitchelloharawild.com/ggicons/reference/guide_pictogram.md),
 [`geom_pictogram()`](https://pkg.mitchelloharawild.com/ggicons/reference/geom_pictogram.md)
+
+## Examples
+
+``` r
+library(ggplot2)
+
+# bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same
+shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
+
+# applied automatically; shown explicitly here just to relabel the legend
+ggplot(NULL, aes(x = "Proportion", value = 37)) +
+  geom_pictogram(icon = shapes$square, n = 100, nrow = 10) +
+  scale_value_continuous(name = "%")
+```

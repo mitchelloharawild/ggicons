@@ -99,6 +99,23 @@ vectors. Use <code><a href="scale_icon_manual.html">scale_icon_manual()</a></cod
     <div class="dont-index"><p><code><a href="scale_icon_manual.html">scale_icon_manual()</a></code></p></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same</span></span></span>
+<span class="r-in"><span><span class="va">shapes</span> <span class="op">&lt;-</span> <span class="fu">icons</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/icons/reference/icon_set.html" class="external-link">icon_set</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"icons"</span>, package <span class="op">=</span> <span class="st">"ggicons"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">2</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  icon <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">shapes</span><span class="op">$</span><span class="va">square</span>, <span class="va">shapes</span><span class="op">$</span><span class="va">circle</span>, <span class="va">shapes</span><span class="op">$</span><span class="va">triangle</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># applied automatically for an icon-vector aesthetic; shown explicitly here</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, icon <span class="op">=</span> <span class="va">icon</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="geom_icon.html">geom_icon</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">scale_icon_identity</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="scale_icon_identity-1.png" alt="" width="700" height="433"></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

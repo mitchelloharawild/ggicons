@@ -88,6 +88,12 @@ will be used as the layer data. A <code>function</code> can be created
 from a <code>formula</code> (e.g. <code>~ head(.x, 10)</code>).</p></dd>
 
 
+<dt id="arg-geom">geom<a class="anchor" aria-label="anchor" href="#arg-geom"></a></dt>
+<dd><p>Override the default connection between <code>stat_pictogram()</code> and
+<code><a href="geom_pictogram.html">geom_pictogram()</a></code>. For more information about overriding these
+connections, see <code><a href="https://ggplot2.tidyverse.org/reference/layer.html" class="external-link">ggplot2::layer()</a></code>.</p></dd>
+
+
 <dt id="arg-position">position<a class="anchor" aria-label="anchor" href="#arg-position"></a></dt>
 <dd><p>A position adjustment to use on the data for this layer. This
 can be used in various ways, including to prevent overplotting and
@@ -225,6 +231,19 @@ right from the left of the panel.</p>
     <div class="dont-index"><p><code><a href="geom_pictogram.html">geom_pictogram()</a></code></p></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same</span></span></span>
+<span class="r-in"><span><span class="va">shapes</span> <span class="op">&lt;-</span> <span class="fu">icons</span><span class="fu">::</span><span class="fu"><a href="https://pkg.mitchelloharawild.com/icons/reference/icon_set.html" class="external-link">icon_set</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"icons"</span>, package <span class="op">=</span> <span class="st">"ggicons"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># only needed directly when pairing with a different geom</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Proportion"</span>, value <span class="op">=</span> <span class="fl">37</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">stat_pictogram</span><span class="op">(</span>geom <span class="op">=</span> <span class="st">"pictogram"</span>, icon <span class="op">=</span> <span class="va">shapes</span><span class="op">$</span><span class="va">square</span>, n <span class="op">=</span> <span class="fl">100</span>, nrow <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="stat_pictogram-1.png" alt="" width="700" height="433"></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

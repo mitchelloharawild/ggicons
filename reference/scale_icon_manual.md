@@ -117,7 +117,8 @@ scale_icon_manual(..., values, breaks = ggplot2::waiver(), na.value = NA)
   length as the number of levels to map. Unlike most `scale_*_manual()`
   counterparts, `values` can't be named by level, since icon vectors
   don't support names, so it's matched positionally against the sorted
-  data levels; use `breaks` to map against a different order.
+  data levels; pass `limits` to map against a different order (`breaks`
+  only controls the legend, not this matching).
 
 - breaks:
 
@@ -149,19 +150,14 @@ A ggplot2 scale.
 
 ``` r
 library(ggplot2)
-library(icons)
 
+# bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same
+shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
 df <- data.frame(
   x = 1:3, y = c(1, 3, 2),
   type = c("a", "b", "c")
 )
 ggplot(df, aes(x, y, icon = type)) +
   geom_icon(size = 10) +
-  scale_icon_manual(values = c(
-    fontawesome$solid$rocket,
-    fontawesome$solid$star,
-    fontawesome$solid$heart
-  ))
-#> Error: ✖ The fontawesome icon library is not yet installed.
-#> ℹ Install it with `download_fontawesome()`.
+  scale_icon_manual(values = c(shapes$square, shapes$circle, shapes$triangle))
 ```

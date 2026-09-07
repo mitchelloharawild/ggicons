@@ -7,6 +7,8 @@ data is passed straight through with scale_icon_identity(), or mapped
 from discrete values with scale_icon_manual(). Icons also appear in
 legend keys, as fixed-position markers with annotation_icon(), and as
 axis, strip and legend labels via the element_icon() theme element.
+geom_pictogram() draws isotype-style unit charts, waffle/percentage
+charts and rating widgets, encoding a value as a grid of repeated icons.
 
 ## See also
 

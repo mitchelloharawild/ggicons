@@ -58,3 +58,20 @@ instead when a legend is needed.
 ## See also
 
 [`scale_icon_manual()`](https://pkg.mitchelloharawild.com/ggicons/reference/scale_icon_manual.md)
+
+## Examples
+
+``` r
+library(ggplot2)
+
+# bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same
+shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
+df <- data.frame(
+  x = 1:3, y = c(1, 3, 2),
+  icon = c(shapes$square, shapes$circle, shapes$triangle)
+)
+# applied automatically for an icon-vector aesthetic; shown explicitly here
+ggplot(df, aes(x, y, icon = icon)) +
+  geom_icon(size = 10) +
+  scale_icon_identity()
+```
