@@ -127,19 +127,19 @@ recoloured/rescaled/rotated per row at draw time.
 \code{geom_icon()} understands the following aesthetics (\code{icon} is required):
 \itemize{
 \item \strong{\code{icon}}: the icon to draw, as an icon vector from the
-\href{https://github.com/mitchelloharawild/icons}{icons} package — an icon
+\href{https://github.com/mitchelloharawild/icons}{icons} package: an icon
 object (e.g. from \code{\link[icons:read_icon]{icons::read_icon()}} or
 \code{icons::fontawesome$solid$rocket}) or an \code{\link[icons:icon_find]{icons::icon_find()}} result.
 Character ids are not resolved; map an actual icon vector.
 \item \code{x}, \code{y}
 \item \code{colour}/\code{fill}: both map to the icon's single fill colour (icons
-don't have a separate border) — \code{fill} wins when both are set.
+don't have a separate border); \code{fill} wins when both are set.
 \item \code{alpha}
 \item \code{size}: the icon's width/height, in \code{size.unit} (default millimetres).
 \item \code{angle}: rotation, in degrees.
 }
 
-\code{stroke}/\code{linewidth} don't apply — icons are filled shapes, not framed
+\code{stroke}/\code{linewidth} don't apply: icons are filled shapes, not framed
 ones.
 
 

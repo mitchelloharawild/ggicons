@@ -10,14 +10,16 @@ reference:
   - geom_pictogram
   - stat_pictogram
 - title: Scales
-  desc: Map icon data to the `icon` aesthetic.
+  desc: Map icon data to the `icon` aesthetic, and the pictogram `value` aesthetic.
   contents:
   - scale_icon_identity
   - scale_icon_manual
-- title: Legend key
-  desc: Draw icons in legend keys.
+  - scale_value_continuous
+- title: Guides
+  desc: Legends for icon layers.
   contents:
   - draw_key_icon
+  - guide_pictogram
 - title: Annotations
   desc: Add a fixed-position icon to a plot.
   contents:

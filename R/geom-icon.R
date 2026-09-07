@@ -10,18 +10,18 @@
 #' `geom_icon()` understands the following aesthetics (`icon` is required):
 #'
 #' - **`icon`**: the icon to draw, as an icon vector from the
-#'   [icons](https://github.com/mitchelloharawild/icons) package — an icon
+#'   [icons](https://github.com/mitchelloharawild/icons) package: an icon
 #'   object (e.g. from [icons::read_icon()] or
 #'   `icons::fontawesome$solid$rocket`) or an [icons::icon_find()] result.
 #'   Character ids are not resolved; map an actual icon vector.
 #' - `x`, `y`
 #' - `colour`/`fill`: both map to the icon's single fill colour (icons
-#'   don't have a separate border) — `fill` wins when both are set.
+#'   don't have a separate border); `fill` wins when both are set.
 #' - `alpha`
 #' - `size`: the icon's width/height, in `size.unit` (default millimetres).
 #' - `angle`: rotation, in degrees.
 #'
-#' `stroke`/`linewidth` don't apply — icons are filled shapes, not framed
+#' `stroke`/`linewidth` don't apply: icons are filled shapes, not framed
 #' ones.
 #'
 #' @eval ggplot2:::rd_aesthetics("geom", "icon")

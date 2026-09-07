@@ -190,9 +190,7 @@ spelling that ratio out; turn it off with \code{guides(value = "none")}.
 \code{\link[=geom_icon]{geom_icon()}}).
 \item \code{colour}/\code{fill}: the filled-slot colour; empty slots use
 \code{empty.colour} instead.
-\item \code{alpha}, \code{angle}: as in \code{\link[=geom_icon]{geom_icon()}}.
-\item \code{size}: as in \code{\link[=geom_icon]{geom_icon()}}, but defaults to auto-fitting the grid to
-the available space instead of a fixed size; see \code{size.unit}.
+\item \code{alpha}, \code{angle}, \code{size}: as in \code{\link[=geom_icon]{geom_icon()}}.
 }
 
 

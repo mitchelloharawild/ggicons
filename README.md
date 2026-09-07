@@ -16,9 +16,9 @@ The ggicons package lets you visualise data with icons in
 [ggplot2](https://ggplot2.tidyverse.org). It draws vector icons from the
 [icons](https://pkg.mitchelloharawild.com/icons/) package directly in a
 ggplot2 plot. Icons can be mapped to data and drawn like points, placed
-at fixed positions as annotations, or substituted in for axis, strip and
-legend labels (all styled with colour, size, alpha and angle
-aesthetics).
+at fixed positions as annotations, substituted in for axis, strip and
+legend labels, or repeated in a grid as an isotype-style pictogram (all
+styled with colour, size, alpha and angle aesthetics).
 
 ## Installation
 
@@ -137,3 +137,26 @@ ggplot(mtcars, aes(factor(cyl), mpg)) +
 ```
 
 <img src="man/figures/README-element-icon-1.png" alt="" width="100%" />
+
+### Isotype charts with `geom_pictogram()`
+
+`geom_pictogram()` draws a value as a grid of repeated icons, some
+fraction of them filled in and the rest left faded, the way an isotype
+chart uses “each icon = n units” instead of a bar’s length. Leaving `y`
+out of `aes()` grows the grid upward like a column chart, with `value`
+mapped to how many icons are filled and `icon`/`colour` mapped to
+category:
+
+``` r
+commutes <- data.frame(mode = c("Bicycle", "Car"), count = c(890, 1230))
+ggplot(commutes, aes(mode, value = count, icon = mode, colour = mode)) +
+  geom_pictogram(ncol = 5) +
+  scale_icon_manual(values = c(fontawesome$solid$bicycle, fontawesome$solid$car)) +
+  scale_colour_manual(values = c("steelblue", "firebrick")) +
+  labs(x = NULL, value = "commuters")
+```
+
+<img src="man/figures/README-geom-pictogram-1.png" alt="" width="100%" />
+
+Each icon stands for a fixed amount (here, 20 commuters);
+`guide_pictogram()` spells this ratio out in the legend automatically.
