@@ -60,25 +60,21 @@
 #'   )
 annotation_icon <- function(icon, x, y, colour = "black", fill = NA, size = 6,
                              alpha = NA, angle = 0, size.unit = "mm") {
-  # Validate icon up front so a bad argument is reported here, not as an
-  # opaque failure deep inside icon_path() or vctrs' recycling machinery.
+  # Validate icon up front so a bad argument gets a clear error.
   if (!inherits(icon, "icons")) {
     cli::cli_abort(
       "{.arg icon} must be an icon vector from the {.pkg icons} package (e.g. {.code icons::fontawesome$solid$rocket}), not {.obj_type_friendly {icon}}."
     )
   }
 
-  # Recycle all arguments to a common length, so e.g. two icons at two
-  # positions, or one icon repeated at several positions, both work.
+  # Recycle all arguments to a common length.
   rec <- vctrs::vec_recycle_common(
     icon = icon, x = x, y = y, colour = colour, fill = fill,
     size = size, alpha = alpha, angle = angle
   )
   data <- as.data.frame(rec)
 
-  # Mark these AsIs so ggplot2 skips scale selection and uses the literal
-  # values, rather than reinterpreting them through a default colour/size
-  # scale (which would also perturb any shared scale used elsewhere).
+  # Mark as AsIs so ggplot2 uses these values literally, skipping scale selection.
   data$colour <- I(data$colour)
   data$fill <- I(data$fill)
   data$size <- I(data$size)
@@ -87,8 +83,7 @@ annotation_icon <- function(icon, x, y, colour = "black", fill = NA, size = 6,
 
   ggplot2::layer(
     data = data,
-    # x/y are mapped as real aesthetics, deliberately training the panel's
-    # position scales the same as annotate("point", ...) does.
+    # Map x/y as real aesthetics so they train the panel's position scales.
     mapping = ggplot2::aes(
       x = x, y = y, icon = icon, colour = colour, fill = fill,
       alpha = alpha, size = size, angle = angle

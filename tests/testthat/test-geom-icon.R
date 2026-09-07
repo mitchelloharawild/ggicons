@@ -16,15 +16,13 @@ test_that("geom_icon() builds and draws without error for icon vectors", {
   expect_no_error(b <- ggplot2::ggplot_build(p))
   expect_no_error(grid::grid.draw(ggplot2::ggplotGrob(p)))
 
-  # Icon vectors are resolved to SVG paths at draw time (see draw_panel),
-  # not baked into the built layer data.
+  # Icon vectors are resolved to SVG paths at draw time, not baked into the built layer data.
   expect_s3_class(b$data[[1]]$icon, "icons")
 })
 
 test_that("geom_icon() sees icons after scale mapping, not before", {
   df <- data.frame(x = 1:3, y = c(1, 3, 2), cat = c("a", "b", "c"))
-  # Positional, not named: icon vectors don't support names, so values are
-  # matched against the sorted data levels ("a", "b", "c") in order.
+  # Positional, not named: icon vectors don't support names, so values match sorted levels in order.
   vals <- c(
     icons::fontawesome$solid$rocket,
     icons::fontawesome$solid$star,
@@ -55,10 +53,7 @@ test_that("geom_icon() skips NA icons rather than failing the whole plot", {
 })
 
 test_that("geom_icon() gives a helpful error for an unmapped icon aesthetic", {
-  # No scale converts `type` into icons (no default icon palette exists),
-  # so `data$icon` is still the raw character column by draw time -- this
-  # should be caught (and explained) at ggplot_build(), not left to surface
-  # as icons::icon_path()'s opaque error inside grob conversion.
+  # No default icon palette exists, so the raw character column must be caught with a clear error at ggplot_build().
   df <- data.frame(x = 1:3, y = c(1, 3, 2), type = c("a", "b", "c"))
   p <- ggplot2::ggplot(df, ggplot2::aes(x, y, icon = type)) + geom_icon()
 
@@ -93,10 +88,7 @@ test_that("draw_key_icon() copes with a borrowed key glyph with no icon column",
 })
 
 test_that("icons keep equal x/y physical extents in a non-square viewport", {
-  # size_npc must be computed per-axis (convertWidth for x, convertHeight
-  # for y): a single npc factor shared between axes only matches physical
-  # length on both when the viewport happens to be square, and stretches
-  # icons to match the panel's aspect ratio otherwise (the reported bug).
+  # size_npc must be computed per-axis; a shared factor would stretch icons to match the panel's aspect ratio.
   grid::grid.newpage()
   grid::pushViewport(grid::viewport(width = grid::unit(200, "mm"), height = grid::unit(50, "mm")))
   on.exit(grid::popViewport())

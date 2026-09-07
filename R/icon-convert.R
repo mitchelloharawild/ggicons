@@ -1,9 +1,4 @@
-# SVG -> grImport2::Picture conversion, cached per icon (per unique SVG file
-# path) so a plot with thousands of rows re-parses each distinct icon once,
-# not once per row. This is one layer below icon-geometry.R's cache (which
-# turns this Picture into flattened, per-row-transformable coordinates) --
-# recolouring/resizing/positioning happens later, per row, at draw time
-# (see icon_grob()), without touching either cache.
+# Caches SVG-to-Picture conversion per icon path, so each distinct icon is parsed once, not once per row.
 icon_convert_cache <- new.env(parent = emptyenv())
 
 get_icon_converted <- function(path) {
@@ -26,9 +21,7 @@ build_icon_converted <- function(path) {
     cli::cli_abort("Can't find the icon's SVG file at {.file {path}}.")
   }
 
-  # grImport2::readPicture() expects a restricted/"cleaned" SVG dialect;
-  # rsvg normalises arbitrary SVG (including the icons package's path data)
-  # into that dialect.
+  # Normalise arbitrary SVG into the restricted dialect readPicture() expects.
   tmp <- tempfile(fileext = ".svg")
   on.exit(unlink(tmp))
   rsvg::rsvg_svg(path, tmp)

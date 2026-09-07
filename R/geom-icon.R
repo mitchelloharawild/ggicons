@@ -93,13 +93,8 @@ GeomIcon <- ggplot2::ggproto(
 
   draw_key = draw_key_icon,
 
-  # Validates data$icon as early as this can run: use_defaults() is called
-  # from Layer$compute_geom_2(), at ggplot_build() time, right after
-  # non-position scales (e.g. scale_icon_manual()) have mapped the icon
-  # aesthetic -- earlier than that (e.g. setup_data()) would still be
-  # looking at raw, unmapped values (see draw_panel() below). This is also
-  # what validates the legend key glyph, since guides build keys via the
-  # same compute_geom_2() path.
+  # Validate data$icon right after scale mapping, before setup_data() would see raw values.
+  # Also validates the legend key glyph, since guides build keys the same way.
   use_defaults = function(self, data, params = list(), modifiers = ggplot2::aes(),
                            default_aes = NULL, theme = NULL, ...) {
     data <- ggplot2::ggproto_parent(ggplot2::Geom, self)$use_defaults(
@@ -116,12 +111,8 @@ GeomIcon <- ggplot2::ggproto(
     na.rm = FALSE,
     size.unit = "mm"
   ) {
-    # Resolved here, at draw time, rather than in setup_data(): scale
-    # mapping (e.g. scale_icon_manual()'s level -> icon lookup) happens
-    # after setup_data() runs, so resolving any earlier would still be
-    # working with the raw, unmapped aesthetic values. use_defaults() above
-    # already validated data$icon by this point; this check is just a cheap
-    # defence in case something reaches draw_panel() a different way.
+    # Resolve icon paths at draw time, after scale mapping has run.
+    # Icon is already validated; this is a cheap defensive check.
     check_icon_aes(data$icon)
     data$icon <- icons::icon_path(data$icon)
     coords <- coord$transform(data, panel_params)

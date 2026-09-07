@@ -1,17 +1,5 @@
-# Flattened, cached-per-icon path geometry: local x/y coordinates (unit
-# square, y-up, centred on the origin), the `id.lengths` grouping needed to
-# render holes via the fill rule, and that rule. This is what lets
-# icon_grob() (see icon-grob.R) draw an entire layer with one
-# grid::pathGrob() call instead of one grob per row.
-#
-# grImport2::pictureGrob() computes exactly this (segment flattening,
-# subpath bookkeeping, viewBox scaling) internally, but redoes it from
-# scratch on every call rather than caching it -- fine for a one-off
-# picture, wasteful for the same icon drawn at thousands of rows. So this
-# runs pictureGrob() once per unique icon (on top of the already-cached
-# grImport2::Picture from icon-convert.R), pulls the resulting shapes' raw
-# numeric coordinates back out, and caches *that*. Recolouring/positioning
-# still happens later, per row, in icon_grob().
+# Caches flattened path geometry per icon: local x/y coordinates, id.lengths grouping, and fill rule.
+# Runs pictureGrob() once per unique icon and caches its raw coordinates, instead of recomputing per row.
 icon_geometry_cache <- new.env(parent = emptyenv())
 
 get_icon_geometry <- function(path) {
@@ -35,10 +23,7 @@ build_icon_geometry <- function(path) {
     return(NULL)
   }
 
-  # expansion = 0, distort = FALSE: no padding, same aspect-ratio handling
-  # pictureGrob() normally draws with. gpFUN is identity here because
-  # colour is applied per row later (icon_grob()), not baked into the
-  # cached geometry.
+  # No padding, same aspect-ratio handling as a normal draw. Colour is applied later per row, not baked in here.
   g <- grImport2::pictureGrob(
     pic,
     x = 0.5, y = 0.5, width = 1, height = 1,
@@ -63,20 +48,13 @@ build_icon_geometry <- function(path) {
     return(NULL)
   }
 
-  # xscale/yscale are the icon's viewBox bounds, pre-flipped by grImport2
-  # (yscale = c(ymax, ymin)) to translate SVG's y-down coordinates into
-  # grid's y-up convention. Normalising by them here means each row's
-  # transform (icon_grob()) is just rotate/scale/translate on plain numbers.
+  # The icon's viewBox bounds, pre-flipped to convert SVG's y-down coordinates into grid's y-up convention.
   xr <- pic@summary@xscale
   yr <- pic@summary@yscale
 
   x <- unlist(lapply(shapes, `[[`, "x"))
   y <- unlist(lapply(shapes, `[[`, "y"))
-  # A picPath's id.lengths is NULL (not length(x)) when it has only one
-  # subpath -- grImport2's/grid's shorthand for "treat all of x/y as one
-  # path" -- so it has to be filled in explicitly before concatenating
-  # shapes together, or those points silently go missing from the combined
-  # id.lengths total below.
+  # id.lengths is NULL for a single-subpath shape; fill it in explicitly before concatenating.
   id.lengths <- unlist(lapply(shapes, function(s) s$id.lengths %||% length(s$x)))
 
   list(
@@ -87,10 +65,7 @@ build_icon_geometry <- function(path) {
   )
 }
 
-# Depth-first walk collecting every grImport2 "picPath" grob -- the
-# fill-region primitive readPicture() produces for an SVG <path> (as
-# opposed to "picRect"/"picPolyline" for <rect>/stroke data, which single-
-# fill icon glyphs don't rely on).
+# Depth-first walk collecting every picPath grob, the fill-region primitive for an SVG path element.
 collect_picpaths <- function(grob, out = list()) {
   if (inherits(grob, "picPath")) {
     out[[length(out) + 1]] <- grob

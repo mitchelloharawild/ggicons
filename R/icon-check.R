@@ -1,5 +1,4 @@
-# Validates that icon is an <icons> vector (or NULL), raising a clear error
-# early rather than a cryptic one deep inside grob construction.
+# Validates icon is an icons vector or NULL, raising a clear error early.
 check_icon_aes <- function(icon, call = NULL) {
   if (is.null(icon) || inherits(icon, "icons")) {
     return(invisible(icon))

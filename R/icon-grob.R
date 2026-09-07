@@ -1,35 +1,17 @@
-# Build the grob for a whole geom_icon() layer -- one row per element of
-# the vectors below (also used with length-1 vectors for a single icon,
-# e.g. draw_key_icon()). Rather than one gTree+viewport+pictureGrob per row
-# (grImport2's own recolour/reposition mechanism), every row's icon is
-# transformed by hand from its cached local geometry (see icon-geometry.R)
-# and drawn with as few grid::pathGrob() calls as the icons' fill rules
-# allow -- one per distinct rule among the rows actually drawn, typically
-# just one for a whole layer. That turns an O(n) sequence of grid draw
-# calls into O(1) (or O(distinct rules)), which is where the real cost was:
-# grImport2::pictureGrob() rebuilds its entire path tree from scratch on
-# every call, even for an already-cached grImport2::Picture.
+# Builds the grob for a whole geom_icon() layer, one row per element of the vectors below
+# (also used with length-1 vectors for a single icon).
+# Each row's icon is transformed by hand from its cached local geometry and drawn with
+# as few pathGrob() calls as the icons' fill rules require, typically just one per layer.
 #
-# The `size` aesthetic is in an absolute unit (size.unit, default "mm"),
-# but this function runs at grob-*construction* time (inside draw_panel()),
-# before ggplot2's gtable has pushed the actual panel viewport -- so mm
-# can't be safely converted to npc here; whatever viewport happens to be
-# active on the device at that point is not necessarily the panel's. That
-# conversion is deferred to a lazy "iconpath" grob (see makeContent.iconpath
-# below), resolved once real drawing starts and the correct viewport is
-# current -- the same trick grid uses for `viewport(width = unit(x, "mm"))`,
-# and grImport2 for its own pictureGrob() sizing.
+# size is in an absolute unit, but this runs before the real panel viewport exists,
+# so converting to npc here isn't safe. That conversion is deferred to a lazy "iconpath"
+# grob, resolved once real drawing starts.
 #
-# The conversion is deliberately *not* done via grid's unit arithmetic
-# (`unit(x, "npc") + unit(y, "mm")` per point) either: profiling showed
-# `Ops.unit` dominates cost at this scale, eating most of the win from
-# batching. One `convertWidth()` call up front, then plain numeric
-# arithmetic, is both correct and fast.
+# Plain numeric arithmetic is used instead of grid's unit arithmetic, since profiling
+# showed Ops.unit dominates cost at this scale.
 icon_grob <- function(path, x, y, size, colour, fill, alpha, angle,
                        size.unit = "mm") {
-  # Callers always pass `path` as a plain character vector of SVG file
-  # paths, already resolved from the `icon` aesthetic's icon vector via
-  # icons::icon_path() (see geom-icon.R / draw-key-icon.R).
+  # path is a plain character vector of SVG file paths, already resolved from the icon aesthetic.
   n <- max(
     length(path), length(x), length(y), length(size),
     length(colour), length(fill), length(alpha), length(angle)
@@ -60,10 +42,7 @@ icon_grob <- function(path, x, y, size, colour, fill, alpha, angle,
   cosA <- cos(radians)
   sinA <- sin(radians)
 
-  # rule is one setting per pathGrob() call, not per icon instance, so
-  # icons whose fill rules differ (rare -- see icon-geometry.R) need
-  # separate calls. In the common case (every icon uses the same rule)
-  # this is a single grob for the entire layer.
+  # rule applies per pathGrob() call, so icons with different fill rules need separate calls; usually just one.
   rules <- vapply(vgeoms, `[[`, character(1), "rule")
   shape_grobs <- lapply(split(seq_along(vgeoms), rules), function(idx) {
     npts <- vapply(vgeoms[idx], function(g) length(g$x), integer(1))
@@ -75,8 +54,7 @@ icon_grob <- function(path, x, y, size, colour, fill, alpha, angle,
       g <- vgeoms[[i]]
       k <- length(g$x)
       rng <- (pos + 1):(pos + k)
-      # Rotated, but *not* yet scaled by size -- that needs an mm-to-npc
-      # factor only known at draw time (see makeContent.iconpath).
+      # Rotated but not yet scaled by size; that needs a factor only known at draw time.
       local_x[rng] <- g$x * cosA[[i]] - g$y * sinA[[i]]
       local_y[rng] <- g$x * sinA[[i]] + g$y * cosA[[i]]
       pos <- pos + k
@@ -96,13 +74,8 @@ icon_grob <- function(path, x, y, size, colour, fill, alpha, angle,
   ggname("geom_icon", grid::gTree(children = do.call(grid::gList, shape_grobs)))
 }
 
-# A grob that defers icon sizing to draw time: `local_x`/`local_y` are
-# rotated but unscaled icon-shape coordinates, `size`/`size.unit` an
-# absolute-unit scale factor per point. makeContent() below turns this into
-# a plain grid::pathGrob() once, at the point grid actually resolves it
-# against the real (panel) viewport -- a gTree with no children yet, filled
-# in lazily, the same pattern grImport2's own pictureGrob(ext = "gridSVG")
-# uses via makeContent.PictureGrob()/setChildren().
+# Defers icon sizing to draw time: local_x/local_y are rotated but unscaled coordinates,
+# resolved into a single pathGrob once the real viewport exists.
 iconpath_grob <- function(local_x, local_y, pos_x, pos_y, size, size.unit,
                            id.lengths, pathId.lengths, rule, gp) {
   grid::gTree(
@@ -115,12 +88,7 @@ iconpath_grob <- function(local_x, local_y, pos_x, pos_y, size, size.unit,
 
 #' @exportS3Method grid::makeContent
 makeContent.iconpath <- function(x) {
-  # npc is fraction-of-viewport-*width* on x and fraction-of-viewport-
-  # *height* on y -- the same size in "npc" only maps to the same physical
-  # length on both axes when the panel happens to be square. Converting
-  # separately per axis (and applying each factor to its own coordinate)
-  # keeps icons at their original proportions regardless of panel aspect
-  # ratio; a single shared factor would stretch/squish them to match it.
+  # Convert size separately per axis so icons keep their proportions regardless of panel aspect ratio.
   size_npc_x <- grid::convertWidth(grid::unit(x$size, x$size.unit), "npc", valueOnly = TRUE)
   size_npc_y <- grid::convertHeight(grid::unit(x$size, x$size.unit), "npc", valueOnly = TRUE)
   path <- grid::pathGrob(

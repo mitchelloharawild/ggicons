@@ -1,4 +1,4 @@
-# Validates that `icons` is a named list of length-1 <icons> vectors.
+# Validates icons is a named list of length-1 icon vectors.
 check_icon_lookup <- function(icons, call = rlang::caller_env()) {
   if (is.null(icons)) {
     return(invisible(icons))
@@ -72,24 +72,14 @@ element_icon <- function(icons = NULL, ..., size = NULL, colour = NULL,
   text <- ggplot2::element_text(
     ..., size = size, colour = colour, inherit.blank = inherit.blank
   )
-  # `element_text()` returns an S7 object, whose `$` accessor only returns
-  # its own declared properties, so `icons` is stashed as a plain attribute
-  # instead (which survives ggplot2's element merging) and read via attr().
+  # Stash icons as an attribute, since element_text()'s S7 object only exposes its own declared properties.
   attr(text, "icons") <- icons
   class(text) <- c("element_icon", class(text))
   text
 }
 
-# A grob that defers both x/y position conversion and the icon_grob() call
-# to makeContent(), since the correct viewport (native scale for the axis,
-# etc.) only exists once grid is actually drawing, not at construction time.
-# `width`/`height` are set eagerly so gtable can size the row/column before
-# makeContent() runs; otherwise the row collapses to zero size.
-#
-# `hjust`/`vjust`/`angle`/`margin`/`margin_x`/`margin_y` carry the same
-# layout inputs element_text()'s own titleGrob() uses -- the `x`/`y` anchor
-# alone isn't enough to reproduce its positioning, so makeContent() below
-# redoes that math for the icon side (see icon_rotate_just()).
+# Defers position conversion and drawing to makeContent(), once the real viewport exists.
+# width/height are set eagerly so gtable can size the row before makeContent() runs.
 element_icon_grob <- function(path, x, y, size, colour, angle, size.unit,
                                hjust, vjust, margin, margin_x, margin_y) {
   grid::gTree(
@@ -102,11 +92,7 @@ element_icon_grob <- function(path, x, y, size, colour, angle, size.unit,
   )
 }
 
-# Coerce a position (numeric, or a grid::unit) to plain npc numerics, in the
-# viewport current when this runs (`convert` is grid::convertX/convertY).
-# Callers always supply a concrete value -- defaulting an omitted x/y (e.g.
-# the position orthogonal to an axis, or both for a legend/strip label)
-# happens earlier, in element_grob.element_icon(), via icon_rotate_just().
+# Coerce a position (numeric or grid::unit) to plain npc numerics in the current viewport.
 as_npc <- function(v, convert) {
   if (!grid::is.unit(v)) {
     v <- grid::unit(v, "npc")
@@ -114,14 +100,8 @@ as_npc <- function(v, convert) {
   convert(v, "npc", valueOnly = TRUE)
 }
 
-# Mirrors ggplot2's own (unexported) rotate_just(): swaps hjust/vjust by
-# 90-degree quadrant, so a *default* (unspecified) x/y position, and any
-# margin applied against it, land on the correct side of a rotated label --
-# the same trick element_text()'s titleGrob() uses to size/place the row or
-# column it's drawn into. Kept as a small local copy (same formula, same
-# documented imprecision away from the 0/90/180/270 cardinal angles) rather
-# than calling the unexported ggplot2 internal at run time. `hjust`/`vjust`
-# are assumed already numeric (see element_grob.element_icon()).
+# Swaps hjust/vjust by 90-degree quadrant so a default position lands on the correct side of a rotated label.
+# Assumes hjust/vjust are already numeric.
 icon_rotate_just <- function(angle, hjust, vjust) {
   angle <- (angle %||% 0) %% 360
   case <- findInterval(angle, c(0, 90, 180, 270, 360))
@@ -140,10 +120,7 @@ makeContent.elementiconpath <- function(x) {
   anchor_x <- as_npc(x$x, grid::convertX)
   anchor_y <- as_npc(x$y, grid::convertY)
 
-  # Margins are only added in the direction(s) the caller asked for
-  # (margin_x/margin_y), exactly as element_text()'s titleGrob() does --
-  # e.g. axis.text.x only ever sets margin_y (the gap between the axis line
-  # and the label), never margin_x.
+  # Only add margin in the direction(s) the caller requested.
   if (isTRUE(x$margin_x) && !is.null(x$margin)) {
     l <- grid::convertWidth(x$margin[4], "npc", valueOnly = TRUE)
     r <- grid::convertWidth(x$margin[2], "npc", valueOnly = TRUE)
@@ -155,13 +132,7 @@ makeContent.elementiconpath <- function(x) {
     anchor_y <- anchor_y - t * just$vjust + b * (1 - just$vjust)
   }
 
-  # hjust/vjust shift the icon in its own local (unrotated) frame, then that
-  # offset is rotated about the anchor -- the same order grid's own
-  # textGrob() applies hjust/vjust and rotation in. Unlike the
-  # quadrant-swapped `just` above (only needed to size/place the allocated
-  # row/margin the same way ggplot2 does), this part is exact at every
-  # angle, not just the cardinal ones, since the icon's local box is a
-  # simple size-by-size square with no font metrics to approximate.
+  # Shift the icon in its local frame by hjust/vjust, then rotate that offset about the anchor.
   size_npc_x <- grid::convertWidth(grid::unit(x$size, x$size.unit), "npc", valueOnly = TRUE)
   size_npc_y <- grid::convertHeight(grid::unit(x$size, x$size.unit), "npc", valueOnly = TRUE)
   local_dx <- size_npc_x * (0.5 - x$hjust)
@@ -196,10 +167,7 @@ widthDetails.elementicongrob <- function(x) x$width
 #' @exportS3Method grid::heightDetails
 heightDetails.elementicongrob <- function(x) x$height
 
-# Coerce hjust/vjust to numeric, the way ggplot2's own rotate_just() does --
-# element_text() documents these as numeric, but some ggplot2-internal
-# callers still pass "left"/"right"/"top"/"bottom" for certain guide
-# elements, so this stays tolerant of the same inputs.
+# Coerce hjust/vjust to numeric, tolerating character values like left/right/top/bottom.
 as_just_numeric <- function(v, chars) {
   if (is.character(v)) {
     out <- match(v, chars) - 1
@@ -215,7 +183,7 @@ element_grob.element_icon <- function(element, label = "", x = NULL, y = NULL, .
                                        margin = NULL, margin_x = FALSE, margin_y = FALSE) {
   n <- max(length(label), length(x), length(y))
   if (n == 0L) {
-    # No labels to draw at all (e.g. a guide with zero breaks).
+    # No labels to draw.
     return(grid::nullGrob())
   }
   label <- rep_len(label %||% "", n)
@@ -225,10 +193,7 @@ element_grob.element_icon <- function(element, label = "", x = NULL, y = NULL, .
   ang <- angle %||% element$angle %||% 0
   mgn <- margin %||% element$margin
 
-  # `x`/`y` may each be omitted (the position orthogonal to an axis, or both
-  # for a legend/strip label) -- default them the way element_text()'s own
-  # titleGrob() does, via the rotated justification, rather than always
-  # centring at npc 0.5 regardless of hjust/vjust/angle.
+  # Default omitted x/y via rotated justification, matching element_text()'s own layout.
   just <- icon_rotate_just(ang, hj, vj)
   if (is.null(x)) x <- rep(just$hjust, n) else x <- rep_len(x, n)
   if (is.null(y)) y <- rep(just$vjust, n) else y <- rep_len(y, n)
@@ -263,8 +228,7 @@ element_grob.element_icon <- function(element, label = "", x = NULL, y = NULL, .
   }
 
   if (any(!icon_idx)) {
-    # Dispatch to element_text()'s own element_grob() method for every
-    # unmatched label, rather than reimplementing its layout logic.
+    # Dispatch unmatched labels to element_text()'s own element_grob() method.
     text_element <- element
     class(text_element) <- setdiff(class(text_element), "element_icon")
     text_part <- ggplot2::element_grob(
@@ -287,8 +251,7 @@ element_grob.element_icon <- function(element, label = "", x = NULL, y = NULL, .
     return(grid::nullGrob())
   }
 
-  # Combine both children's sizes eagerly for gtable layout, before either
-  # child's own content is built.
+  # Combine both children's sizes eagerly for gtable layout.
   widths <- lapply(children, grid::grobWidth)
   heights <- lapply(children, grid::grobHeight)
   combined_width <- Reduce(grid::unit.pmax, widths)

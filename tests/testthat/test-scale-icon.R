@@ -21,9 +21,7 @@ test_that("scale_icon_identity() draws no legend by default", {
 })
 
 test_that("scale_icon_manual() maps discrete levels to icons positionally", {
-  # cat's row order ("c", "a", "b") deliberately doesn't match vals' order,
-  # to check values are matched against the *sorted* levels ("a", "b", "c"),
-  # not named lookup (icon vectors don't support names) or row order.
+  # Row order deliberately differs from vals' order, to check values match sorted levels, not row order.
   df <- data.frame(x = 1:3, y = 1:3, cat = c("c", "a", "b"))
   vals <- c(
     icons::fontawesome$solid$rocket,
@@ -35,7 +33,7 @@ test_that("scale_icon_manual() maps discrete levels to icons positionally", {
     scale_icon_manual(values = vals)
 
   expect_no_error(b <- ggplot2::ggplot_build(p))
-  # vals[1:3] map to sorted levels "a", "b", "c"; rows are "c", "a", "b".
+  # vals map to sorted levels a/b/c; rows are ordered c/a/b.
   expected <- unname(icons::icon_path(vals))[c(3, 1, 2)]
   expect_identical(unname(icons::icon_path(b$data[[1]]$icon)), expected)
   expect_no_error(grid::grid.draw(ggplot2::ggplotGrob(p)))
