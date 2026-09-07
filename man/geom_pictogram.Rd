@@ -14,7 +14,8 @@ geom_pictogram(
   n = NULL,
   nrow = NULL,
   ncol = NULL,
-  symbol_value = 1,
+  symbol_value = NULL,
+  n_target = 20,
   flow = "row",
   size.unit = "mm",
   spacing = 0.2,
@@ -106,36 +107,43 @@ lists which parameters it can accept.
 grows the grid to fit \code{value} instead.}
 
 \item{nrow, ncol}{Grid shape. Set at most one; the other is derived to
-wrap the slots. Both \code{NULL} wraps to a single row/column - see
+wrap the slots. Both \code{NULL} wraps to a single row/column; see
 Orientation for which.}
 
-\item{symbol_value}{The data value one slot represents. Defaults to \code{1},
-i.e. \code{value} is already a slot count.}
+\item{symbol_value}{The data value one slot represents. \code{NULL} (the
+default) picks one automatically: \code{1} in fixed-grid mode (\code{value} is
+already a slot count, e.g. a percentage out of \code{n = 100}), or, in
+growing mode, the smallest "nice" round number (1, 2 or 5 times a
+power of ten) that keeps the layer's largest value to around
+\code{n_target} icons; see that argument. Set explicitly to turn
+auto-picking off.}
+
+\item{n_target}{In growing mode, roughly how many icons deep the growing
+dimension should get for the layer's largest value, when
+\code{symbol_value} is picked automatically. Turn this up for a
+finer-grained chart (more, smaller icons), down for a coarser one
+(fewer, bigger icons). Ignored if \code{symbol_value} is set explicitly, or
+in fixed-grid mode.}
 
 \item{flow}{Fill order: \code{"row"} (default) fills left-to-right then wraps
 to the next row; \code{"col"} fills top-to-bottom then wraps to the next
 column.}
 
 \item{size.unit}{The unit \code{size} is interpreted in, as in \code{\link[=geom_icon]{geom_icon()}}.
-Also the unit auto-fit sizing computes in, when \code{size} is left at its
-default (\code{NA}): the grid then grows or shrinks to use as much of its
-available space as it can without overflowing - each pictogram's own
-share of the panel on an axis you mapped (the same way \code{geom_bar()}
-derives bar width from \code{\link[ggplot2:resolution]{ggplot2::resolution()}}), full panel height/width
-on one \code{\link[=stat_pictogram]{stat_pictogram()}} left unmapped. Set \code{size} to a number to
-opt back out to a fixed physical size, as in \code{\link[=geom_icon]{geom_icon()}}.}
+Left at its default (\code{NA}), \code{size} instead auto-fits: each pictogram
+grows or shrinks to fill its own share of the panel, the way
+\code{geom_bar()} derives bar width. Set \code{size} to a number to opt out to a
+fixed physical size.}
 
 \item{spacing}{Gap between adjacent icons, as a fraction of \code{size}.}
 
 \item{hjust, vjust}{Where the grid sits relative to \verb{(x, y)}, as a
-fraction of its width/height - \code{0.5} centres it, \code{0}/\code{1} anchor an
-edge, the way \code{geom_bar()}'s bars sit on their baseline. Default
-(\code{NULL}) follows \code{\link[=stat_pictogram]{stat_pictogram()}}'s orientation: \code{0.5} on an axis
-you mapped, \code{0} on one you left unmapped - anchored to that edge of
-the plot panel itself, not a data value, since an unmapped axis gets
-no position scale at all. So leaving \code{y} out of \code{aes()} draws a column
-chart, grown up from the bottom of the panel, with no extra
-arguments, and leaving \code{x} out draws a horizontal bar from the left.}
+fraction of its width/height: \code{0.5} centres it, \code{0}/\code{1} anchor an
+edge. Usually left at the default (\code{NULL}), which follows
+\code{\link[=stat_pictogram]{stat_pictogram()}}'s orientation: centred on an axis you mapped,
+anchored to the panel edge on one you left unmapped. So leaving \code{y}
+out of \code{aes()} draws a column chart growing up from the bottom, and
+leaving \code{x} out draws a bar growing from the left.}
 
 \item{empty.colour, empty.alpha}{Colour and alpha for empty slots.
 \code{empty.alpha} defaults to the \code{alpha} aesthetic.}
@@ -161,29 +169,30 @@ A ggplot2 layer.
 }
 \description{
 \code{geom_pictogram()} draws a value as a grid of repeated icons, some
-fraction of them in a distinct "filled" style - a single-row rating
-widget, a square waffle/percentage chart, and a growing isotype-style
-unit chart are all this geom with different \code{\link[=stat_pictogram]{stat_pictogram()}} grid
-params. See that page for how \code{n}/\code{nrow}/\code{ncol}/\code{symbol_value} combine to
-pick the grid shape and fill count.
+fraction of them filled in and the rest left faded. The same geom
+produces a single-row rating widget, a waffle/percentage chart, or a
+growing isotype-style unit chart, depending on the grid arguments
+(\code{n}/\code{nrow}/\code{ncol}/\code{symbol_value}) passed to \code{\link[=stat_pictogram]{stat_pictogram()}}.
 }
 \section{Aesthetics}{
 
 \code{geom_pictogram()} understands the following aesthetics (\code{value} and
 \code{icon} are required):
 \itemize{
-\item \code{x}, \code{y}: the grid's anchor position, justified by \code{hjust}/\code{vjust}.
-Neither is required on its own - see \code{\link[=stat_pictogram]{stat_pictogram()}}'s Orientation
-section for what leaving one out draws instead.
-\item \strong{\code{value}}: the magnitude a pictogram represents; see
-\code{\link[=stat_pictogram]{stat_pictogram()}} for how it's turned into a filled slot count.
+\item \code{x}, \code{y}: the grid's anchor position. Leaving one out draws a
+bar/column chart instead of a fixed-position grid; see
+\code{\link[=stat_pictogram]{stat_pictogram()}}'s Orientation section.
+\item \strong{\code{value}}: the magnitude a pictogram represents. \code{\link[=stat_pictogram]{stat_pictogram()}}
+turns it into a filled slot count using \code{symbol_value}, the amount one
+icon stands for. Also drives an automatic \code{\link[=guide_pictogram]{guide_pictogram()}} legend
+spelling that ratio out; turn it off with \code{guides(value = "none")}.
 \item \strong{\code{icon}}: the icon drawn in every slot, filled or empty (as in
 \code{\link[=geom_icon]{geom_icon()}}).
-\item \code{colour}/\code{fill}: the \emph{filled}-slot colour (as in \code{\link[=geom_icon]{geom_icon()}}); empty
-slots use \code{empty.colour} instead.
+\item \code{colour}/\code{fill}: the filled-slot colour; empty slots use
+\code{empty.colour} instead.
 \item \code{alpha}, \code{angle}: as in \code{\link[=geom_icon]{geom_icon()}}.
-\item \code{size}: as in \code{\link[=geom_icon]{geom_icon()}}, but defaults (\code{NA}) to auto-fit instead of
-a fixed number - see \code{size.unit}.
+\item \code{size}: as in \code{\link[=geom_icon]{geom_icon()}}, but defaults to auto-fitting the grid to
+the available space instead of a fixed size; see \code{size.unit}.
 }
 
 
@@ -205,26 +214,29 @@ Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
 library(ggplot2)
 library(icons)
 
-# single-row rating: 5 slots, 3 filled
-ggplot(NULL, aes(y = "Rating", value = 3)) +
-  geom_pictogram(icon = fontawesome$solid$star, n = 5, colour = "goldenrod")
-
 # 10x10 waffle: 37\%
 ggplot(NULL, aes(x = "Proportion", value = 37)) +
   geom_pictogram(icon = fontawesome$solid$square, n = 100, nrow = 10)
 
+# single-row rating: 5 slots, 3 filled.
+# The legend has been switched off with `guides(value = "none")`
+ggplot(NULL, aes(y = "Rating", value = 3)) +
+  geom_pictogram(icon = fontawesome$solid$star, n = 5, colour = "goldenrod") +
+  guides(value = "none")
+
 # growing isotype chart: two categories, each sized to its own value
 pets <- data.frame(animal = c("Cat", "Dog"), count = c(23, 15))
 ggplot(pets, aes(animal, y = "Pet", value = count, icon = animal, colour = animal)) +
-  geom_pictogram(symbol_value = 1, nrow = 5) +
+  geom_pictogram(nrow = 5) +
   scale_icon_manual(values = c(fontawesome$solid$cat, fontawesome$solid$dog))
 
-# column chart: no y aesthetic, so each category grows its own column
-# upward from y = 0
-ggplot(pets, aes(animal, value = count, icon = animal, colour = animal)) +
-  geom_pictogram(symbol_value = 5) +
-  scale_icon_manual(values = c(fontawesome$solid$cat, fontawesome$solid$dog))
+# column chart: no y aesthetic, so icons fill like a column geometry
+commutes <- data.frame(mode = c("Bicycle", "Car"), count = c(890, 1230))
+ggplot(commutes, aes(mode, value = count, icon = mode, colour = mode)) +
+  geom_pictogram(ncol = 5) +
+  scale_icon_manual(values = c(fontawesome$solid$bicycle, fontawesome$solid$car)) +
+  labs(value = "commuters")
 }
 \seealso{
-\code{\link[=stat_pictogram]{stat_pictogram()}}, \code{\link[=geom_icon]{geom_icon()}}
+\code{\link[=stat_pictogram]{stat_pictogram()}}, \code{\link[=geom_icon]{geom_icon()}}, \code{\link[=guide_pictogram]{guide_pictogram()}}
 }

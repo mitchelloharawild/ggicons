@@ -14,7 +14,8 @@ stat_pictogram(
   n = NULL,
   nrow = NULL,
   ncol = NULL,
-  symbol_value = 1,
+  symbol_value = NULL,
+  n_target = 20,
   flow = "row",
   na.rm = FALSE,
   show.legend = NA,
@@ -87,11 +88,23 @@ lists which parameters it can accept.
 grows the grid to fit \code{value} instead.}
 
 \item{nrow, ncol}{Grid shape. Set at most one; the other is derived to
-wrap the slots. Both \code{NULL} wraps to a single row/column - see
+wrap the slots. Both \code{NULL} wraps to a single row/column; see
 Orientation for which.}
 
-\item{symbol_value}{The data value one slot represents. Defaults to \code{1},
-i.e. \code{value} is already a slot count.}
+\item{symbol_value}{The data value one slot represents. \code{NULL} (the
+default) picks one automatically: \code{1} in fixed-grid mode (\code{value} is
+already a slot count, e.g. a percentage out of \code{n = 100}), or, in
+growing mode, the smallest "nice" round number (1, 2 or 5 times a
+power of ten) that keeps the layer's largest value to around
+\code{n_target} icons; see that argument. Set explicitly to turn
+auto-picking off.}
+
+\item{n_target}{In growing mode, roughly how many icons deep the growing
+dimension should get for the layer's largest value, when
+\code{symbol_value} is picked automatically. Turn this up for a
+finer-grained chart (more, smaller icons), down for a coarser one
+(fewer, bigger icons). Ignored if \code{symbol_value} is set explicitly, or
+in fixed-grid mode.}
 
 \item{flow}{Fill order: \code{"row"} (default) fills left-to-right then wraps
 to the next row; \code{"col"} fills top-to-bottom then wraps to the next
@@ -119,43 +132,37 @@ A ggplot2 layer.
 \description{
 \code{stat_pictogram()} turns one row of data (an anchor position and a
 \code{value}) into one row per icon slot in a grid, ready for
-\code{\link[=geom_pictogram]{geom_pictogram()}} to draw. It's the counting/layout half of a pictogram,
-the way \code{\link[ggplot2:stat_count]{ggplot2::stat_count()}} is for \code{\link[ggplot2:geom_bar]{ggplot2::geom_bar()}}.
+\code{\link[=geom_pictogram]{geom_pictogram()}} to draw. It's the counting/layout half of a pictogram.
 }
 \section{Grid sizing}{
 
 Two modes, chosen by whether \code{n} (or both \code{nrow} and \code{ncol}) is set:
 \itemize{
 \item \strong{Fixed grid} (\code{n}, or both \code{nrow}/\code{ncol}, given): the grid always has
-\code{n} slots; \code{round(value / symbol_value)} of them are marked filled
-(capped at \code{n}), the rest empty. This is the waffle-chart/rating-widget
-shape — proportions vary, the grid footprint doesn't.
+\code{n} slots; \code{round(value / symbol_value)} of them are filled (capped at
+\code{n}), the rest empty. This is the waffle-chart/rating-widget shape:
+proportions vary, the grid footprint doesn't.
 \item \strong{Growing grid} (\code{n}, \code{nrow} and \code{ncol} all left \code{NULL}, or only one of
 \code{nrow}/\code{ncol} given): the grid has exactly \code{round(value / symbol_value)}
-slots, all filled — an isotype/unit-chart shape where more icons \emph{is}
+slots, all filled. An isotype/unit-chart shape where more icons \emph{is}
 the value, so the footprint grows with it.
 }
 
-Either way, at most one of \code{nrow}/\code{ncol} needs setting; the other wraps to
-fit. With neither set, the grid defaults to a single row, unless \code{x}/\code{y}
-asks for a bar/column shape instead - see Orientation below.
+At most one of \code{nrow}/\code{ncol} needs setting; the other wraps to fit. With
+neither set, the grid defaults to a single row, unless \code{x}/\code{y} asks for a
+bar/column shape instead; see Orientation below.
 }
 
 \section{Orientation}{
 
 \code{x} and \code{y} are the grid's anchor, but only \code{value} is actually required.
-Map both and you get a fixed-position grid, centred on \verb{(x, y)} - a
+Map both and you get a fixed-position grid, centred on \verb{(x, y)}: a
 waffle chart or rating widget. Leave one unmapped and that becomes the
-growth axis of a bar-style stack, anchored to that edge of the plot
-panel itself rather than to any data value on it (an unmapped axis gets
-no position scale at all - see \code{\link[=geom_pictogram]{geom_pictogram()}}'s \code{hjust}/\code{vjust}), the
-way \code{geom_bar()} only requires \code{x}: \code{aes(x = category, value = count)}
-draws a column chart, one growing column per category, up from the
-bottom of the panel; \code{aes(y = category, value = count)} draws a
-horizontal bar, growing right from the left of the panel. With neither
-\code{nrow} nor \code{ncol} set, the missing axis is also the one that grows
-instead of wraps (a single column for a column chart, a single row for
-a bar).
+growth axis of a bar-style stack instead, anchored to that edge of the
+plot panel. \code{aes(x = category, value = count)} draws a column chart,
+one growing column per category, up from the bottom of the panel;
+\code{aes(y = category, value = count)} draws a horizontal bar, growing
+right from the left of the panel.
 }
 
 \seealso{
