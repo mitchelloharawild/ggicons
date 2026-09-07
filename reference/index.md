@@ -2,10 +2,14 @@
 
 ## Geom
 
-Draw icons in place of points.
+Draw icons as a plot layer.
 
 - [`geom_icon()`](https://pkg.mitchelloharawild.com/ggicons/reference/geom_icon.md)
   : Icons
+- [`geom_pictogram()`](https://pkg.mitchelloharawild.com/ggicons/reference/geom_pictogram.md)
+  : Pictograms
+- [`stat_pictogram()`](https://pkg.mitchelloharawild.com/ggicons/reference/stat_pictogram.md)
+  : Pictogram grid layout
 
 ## Scales
 

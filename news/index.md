@@ -33,14 +33,4 @@ Initial CRAN submission.
   [`element_text()`](https://ggplot2.tidyverse.org/reference/element.html))
   for `axis.text`/`strip.text`/`legend.text` that draws any label
   matching a name in a supplied `icons` lookup as an icon, falling back
-  to ordinary text for everything else. This is a first cut of the
-  trickiest part of the package’s design, and ships with some known
-  rough edges (documented in full in
-  [`?element_icon`](https://pkg.mitchelloharawild.com/ggicons/reference/element_icon.md)):
-  the lookup must be a named
-  [`list()`](https://rdrr.io/r/base/list.html) of individual icons
-  rather than a named icon vector (the `icons` package’s vector type
-  can’t carry element names at all); icon sizing follows a simple `size`
-  (points) convention rather than matching text x-height exactly; and
-  `hjust`/`vjust`/margin nudging only apply to the text-fallback side,
-  not to icons (which are always centred at the label position).
+  to ordinary text for everything else.
