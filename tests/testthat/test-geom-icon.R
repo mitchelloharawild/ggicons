@@ -6,11 +6,7 @@ test_that("geom_icon() requires the icon aesthetic", {
 
 test_that("geom_icon() builds and draws without error for icon vectors", {
   df <- data.frame(x = 1:3, y = c(1, 3, 2))
-  df$icon <- c(
-    icons::fontawesome$solid$rocket,
-    icons::fontawesome$solid$star,
-    icons::fontawesome$solid$heart
-  )
+  df$icon <- c(shapes$square, shapes$circle, shapes$triangle)
   p <- ggplot2::ggplot(df, ggplot2::aes(x, y, icon = icon)) + geom_icon(size = 10)
 
   expect_no_error(b <- ggplot2::ggplot_build(p))
@@ -23,11 +19,7 @@ test_that("geom_icon() builds and draws without error for icon vectors", {
 test_that("geom_icon() sees icons after scale mapping, not before", {
   df <- data.frame(x = 1:3, y = c(1, 3, 2), cat = c("a", "b", "c"))
   # Positional, not named: icon vectors don't support names, so values match sorted levels in order.
-  vals <- c(
-    icons::fontawesome$solid$rocket,
-    icons::fontawesome$solid$star,
-    icons::fontawesome$solid$heart
-  )
+  vals <- c(shapes$square, shapes$circle, shapes$triangle)
   p <- ggplot2::ggplot(df, ggplot2::aes(x, y, icon = cat)) +
     geom_icon(size = 10) +
     scale_icon_manual(values = vals)
@@ -39,11 +31,7 @@ test_that("geom_icon() sees icons after scale mapping, not before", {
 
 test_that("geom_icon() skips NA icons rather than failing the whole plot", {
   df <- data.frame(x = 1:3, y = 1:3)
-  icon <- c(
-    icons::fontawesome$solid$rocket,
-    icons::fontawesome$solid$star,
-    icons::fontawesome$solid$heart
-  )
+  icon <- c(shapes$square, shapes$circle, shapes$triangle)
   icon[2] <- NA
   df$icon <- icon
   p <- ggplot2::ggplot(df, ggplot2::aes(x, y, icon = icon)) + geom_icon(size = 10)
@@ -65,8 +53,9 @@ test_that("geom_icon() gives a helpful error for an unmapped icon aesthetic", {
 
 test_that("check_icon_aes() passes through icon vectors, icons and NULL", {
   expect_no_error(check_icon_aes(NULL))
-  expect_no_error(check_icon_aes(icons::fontawesome$solid$rocket))
-  expect_no_error(check_icon_aes(icons::icon_find("rocket")))
+  expect_no_error(check_icon_aes(shapes$square))
+  # icon_find() searches every registered icon set, including custom ones like `shapes`
+  expect_no_error(check_icon_aes(icons::icon_find("square")))
 })
 
 test_that("check_icon_aes() errors with a hint for non-icon values", {
@@ -76,7 +65,7 @@ test_that("check_icon_aes() errors with a hint for non-icon values", {
 
 test_that("draw_key_icon() returns a grob for a legend key row", {
   data <- data.frame(colour = "black", fill = NA, size = 6, alpha = NA, angle = 0)
-  data$icon <- c(icons::fontawesome$solid$rocket)
+  data$icon <- c(shapes$square)
   expect_no_error(g <- draw_key_icon(data, list(size.unit = "mm"), 1))
   expect_true(grid::is.grob(g))
 })

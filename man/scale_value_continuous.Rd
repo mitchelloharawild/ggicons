@@ -106,6 +106,17 @@ Picked up automatically for \code{aes(value = ...)}, so most plots never need
 to call it directly. Exported for overriding \code{guide} or setting explicit
 \code{breaks}.
 }
+\examples{
+library(ggplot2)
+
+# bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same
+shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
+
+# applied automatically; shown explicitly here just to relabel the legend
+ggplot(NULL, aes(x = "Proportion", value = 37)) +
+  geom_pictogram(icon = shapes$square, n = 100, nrow = 10) +
+  scale_value_continuous(name = "\%")
+}
 \seealso{
 \code{\link[=guide_pictogram]{guide_pictogram()}}, \code{\link[=geom_pictogram]{geom_pictogram()}}
 }

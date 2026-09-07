@@ -1,7 +1,7 @@
 test_that("annotation_icon() builds and draws without error for a single icon", {
   p <- ggplot2::ggplot(data.frame(x = 1:3, y = c(1, 3, 2)), ggplot2::aes(x, y)) +
     ggplot2::geom_point() +
-    annotation_icon(icon = icons::fontawesome$solid$rocket, x = 2, y = 3, size = 10)
+    annotation_icon(icon = shapes$triangle, x = 2, y = 3, size = 10)
 
   expect_no_error(b <- ggplot2::ggplot_build(p))
   expect_no_error(grid::grid.draw(ggplot2::ggplotGrob(p)))
@@ -11,7 +11,7 @@ test_that("annotation_icon() builds and draws without error for a single icon", 
 })
 
 test_that("annotation_icon() vectorises/recycles icon, position and style args", {
-  vals <- c(icons::fontawesome$solid$rocket, icons::fontawesome$solid$star)
+  vals <- c(shapes$triangle, shapes$star)
   p <- ggplot2::ggplot() +
     annotation_icon(icon = vals, x = c(1, 2), y = c(1, 1), colour = "steelblue")
 
@@ -25,7 +25,7 @@ test_that("annotation_icon() vectorises/recycles icon, position and style args",
 
 test_that("annotation_icon() recycles a single icon across multiple positions", {
   p <- ggplot2::ggplot() +
-    annotation_icon(icon = icons::fontawesome$solid$heart, x = c(1, 2, 3), y = c(1, 1, 1))
+    annotation_icon(icon = shapes$circle, x = c(1, 2, 3), y = c(1, 1, 1))
 
   expect_no_error(b <- ggplot2::ggplot_build(p))
   expect_length(b$data[[1]]$icon, 3)
@@ -43,14 +43,14 @@ test_that("annotation_icon() errors with a helpful message for a non-icon value"
 })
 
 test_that("annotation_icon() never shows a legend", {
-  layer <- annotation_icon(icon = icons::fontawesome$solid$rocket, x = 1, y = 1)
+  layer <- annotation_icon(icon = shapes$triangle, x = 1, y = 1)
   expect_identical(layer$show.legend, FALSE)
 })
 
 test_that("annotation_icon() renders to a graphics device without error", {
   p <- ggplot2::ggplot(data.frame(x = 1:3, y = c(1, 3, 2)), ggplot2::aes(x, y)) +
     ggplot2::geom_point() +
-    annotation_icon(icon = icons::fontawesome$solid$rocket, x = 2, y = 3, size = 10)
+    annotation_icon(icon = shapes$triangle, x = 2, y = 3, size = 10)
 
   path <- tempfile(fileext = ".png")
   on.exit(unlink(path), add = TRUE)

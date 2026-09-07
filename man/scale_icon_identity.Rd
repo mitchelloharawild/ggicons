@@ -40,6 +40,20 @@ Requesting a legend (\code{guide = "legend"}) isn't supported here: ggplot2's
 discrete scale training only recognises character/factor data, not icon
 vectors. Use \code{\link[=scale_icon_manual]{scale_icon_manual()}} instead when a legend is needed.
 }
+\examples{
+library(ggplot2)
+
+# bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same
+shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
+df <- data.frame(
+  x = 1:3, y = c(1, 3, 2),
+  icon = c(shapes$square, shapes$circle, shapes$triangle)
+)
+# applied automatically for an icon-vector aesthetic; shown explicitly here
+ggplot(df, aes(x, y, icon = icon)) +
+  geom_icon(size = 10) +
+  scale_icon_identity()
+}
 \seealso{
 \code{\link[=scale_icon_manual]{scale_icon_manual()}}
 }

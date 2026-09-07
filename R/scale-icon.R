@@ -34,6 +34,19 @@ scale_type.icons <- function(x) "discrete"
 #' @return A ggplot2 scale.
 #' @seealso [scale_icon_manual()]
 #' @export
+#' @examples
+#' library(ggplot2)
+#'
+#' # bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same
+#' shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
+#' df <- data.frame(
+#'   x = 1:3, y = c(1, 3, 2),
+#'   icon = c(shapes$square, shapes$circle, shapes$triangle)
+#' )
+#' # applied automatically for an icon-vector aesthetic; shown explicitly here
+#' ggplot(df, aes(x, y, icon = icon)) +
+#'   geom_icon(size = 10) +
+#'   scale_icon_identity()
 scale_icon_identity <- function(name = ggplot2::waiver(), ...,
                                  guide = "none", aesthetics = "icon") {
   ggplot2::discrete_scale(
@@ -59,26 +72,24 @@ scale_icon_identity <- function(name = ggplot2::waiver(), ...,
 #'   length as the number of levels to map. Unlike most `scale_*_manual()`
 #'   counterparts, `values` can't be named by level, since icon vectors don't
 #'   support names, so it's matched positionally against the sorted data
-#'   levels; use `breaks` to map against a different order.
+#'   levels; pass `limits` to map against a different order (`breaks` only
+#'   controls the legend, not this matching).
 #'
 #' @return A ggplot2 scale.
 #' @seealso [scale_icon_identity()]
 #' @export
 #' @examples
 #' library(ggplot2)
-#' library(icons)
 #'
+#' # bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same
+#' shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
 #' df <- data.frame(
 #'   x = 1:3, y = c(1, 3, 2),
 #'   type = c("a", "b", "c")
 #' )
 #' ggplot(df, aes(x, y, icon = type)) +
 #'   geom_icon(size = 10) +
-#'   scale_icon_manual(values = c(
-#'     fontawesome$solid$rocket,
-#'     fontawesome$solid$star,
-#'     fontawesome$solid$heart
-#'   ))
+#'   scale_icon_manual(values = c(shapes$square, shapes$circle, shapes$triangle))
 scale_icon_manual <- function(..., values, breaks = ggplot2::waiver(),
                                na.value = NA) {
   ggplot2::scale_discrete_manual(

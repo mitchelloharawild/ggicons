@@ -210,30 +210,34 @@ Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
 
 \examples{
 library(ggplot2)
-library(icons)
+
+# bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same
+shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
 
 # 10x10 waffle: 37\%
 ggplot(NULL, aes(x = "Proportion", value = 37)) +
-  geom_pictogram(icon = fontawesome$solid$square, n = 100, nrow = 10)
+  geom_pictogram(icon = shapes$square, n = 100, nrow = 10)
 
-# single-row rating: 5 slots, 3 filled.
-# The legend has been switched off with `guides(value = "none")`
+# single-row rating: 5 slots, 3 filled, legend switched off
 ggplot(NULL, aes(y = "Rating", value = 3)) +
-  geom_pictogram(icon = fontawesome$solid$star, n = 5, colour = "goldenrod") +
+  geom_pictogram(icon = shapes$star, n = 5, colour = "goldenrod") +
   guides(value = "none")
 
+\dontshow{if (icons::icon_installed(icons::fontawesome)) withAutoprint(\{ # examplesIf}
 # growing isotype chart: two categories, each sized to its own value
 pets <- data.frame(animal = c("Cat", "Dog"), count = c(23, 15))
 ggplot(pets, aes(animal, y = "Pet", value = count, icon = animal, colour = animal)) +
   geom_pictogram(nrow = 5) +
-  scale_icon_manual(values = c(fontawesome$solid$cat, fontawesome$solid$dog))
-
+  scale_icon_manual(values = c(icons::fontawesome$solid$cat, icons::fontawesome$solid$dog))
+\dontshow{\}) # examplesIf}
+\dontshow{if (icons::icon_installed(icons::fontawesome)) withAutoprint(\{ # examplesIf}
 # column chart: no y aesthetic, so icons fill like a column geometry
 commutes <- data.frame(mode = c("Bicycle", "Car"), count = c(890, 1230))
 ggplot(commutes, aes(mode, value = count, icon = mode, colour = mode)) +
   geom_pictogram(ncol = 5) +
-  scale_icon_manual(values = c(fontawesome$solid$bicycle, fontawesome$solid$car)) +
+  scale_icon_manual(values = c(icons::fontawesome$solid$bicycle, icons::fontawesome$solid$car)) +
   labs(value = "commuters")
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=stat_pictogram]{stat_pictogram()}}, \code{\link[=geom_icon]{geom_icon()}}, \code{\link[=guide_pictogram]{guide_pictogram()}}

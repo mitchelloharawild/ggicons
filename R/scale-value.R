@@ -18,6 +18,16 @@
 #' @return A ggplot2 scale.
 #' @seealso [guide_pictogram()], [geom_pictogram()]
 #' @export
+#' @examples
+#' library(ggplot2)
+#'
+#' # bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same
+#' shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
+#'
+#' # applied automatically; shown explicitly here just to relabel the legend
+#' ggplot(NULL, aes(x = "Proportion", value = 37)) +
+#'   geom_pictogram(icon = shapes$square, n = 100, nrow = 10) +
+#'   scale_value_continuous(name = "%")
 scale_value_continuous <- function(
   name = ggplot2::waiver(),
   breaks = ggplot2::waiver(),

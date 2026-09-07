@@ -19,7 +19,7 @@ has_legend <- function(p, side = "right") {
 test_that("value is trained as a continuous scale with guide_pictogram() by default", {
   df <- data.frame(x = "a", value = 37)
   p <- ggplot2::ggplot(df, ggplot2::aes(x, value = value)) +
-    geom_pictogram(icon = icons::fontawesome$solid$square, n = 100, nrow = 10)
+    geom_pictogram(icon = shapes$square, n = 100, nrow = 10)
 
   b <- ggplot2::ggplot_build(p)
   scale <- b$plot$scales$get_scales("value")
@@ -30,7 +30,7 @@ test_that("value is trained as a continuous scale with guide_pictogram() by defa
 test_that("geom_pictogram() draws an automatic value legend with symbol_value's ratio", {
   df <- data.frame(x = "a", value = 37)
   p <- ggplot2::ggplot(df, ggplot2::aes(x, value = value)) +
-    geom_pictogram(icon = icons::fontawesome$solid$square, n = 100, nrow = 10, symbol_value = 5) +
+    geom_pictogram(icon = shapes$square, n = 100, nrow = 10, symbol_value = 5) +
     ggplot2::labs(value = "widgets")
 
   expect_true(has_legend(p))
@@ -42,7 +42,7 @@ test_that("geom_pictogram() draws an automatic value legend with symbol_value's 
 test_that("the legend shows decimals for an explicit symbol_value under 1", {
   df <- data.frame(x = "a", value = 37)
   p <- ggplot2::ggplot(df, ggplot2::aes(x, value = value)) +
-    geom_pictogram(icon = icons::fontawesome$solid$square, n = 100, nrow = 10, symbol_value = 0.5)
+    geom_pictogram(icon = shapes$square, n = 100, nrow = 10, symbol_value = 0.5)
 
   labels <- find_text_labels(ggplot2::ggplotGrob(p))
   expect_true("= 0.5" %in% labels)
@@ -51,14 +51,14 @@ test_that("the legend shows decimals for an explicit symbol_value under 1", {
 test_that("the value legend can be suppressed", {
   df <- data.frame(x = "a", value = 37)
   base <- ggplot2::ggplot(df, ggplot2::aes(x, value = value)) +
-    geom_pictogram(icon = icons::fontawesome$solid$square, n = 100, nrow = 10)
+    geom_pictogram(icon = shapes$square, n = 100, nrow = 10)
 
   expect_true(has_legend(base))
   expect_false(has_legend(base + ggplot2::guides(value = "none")))
 
   hidden <- ggplot2::ggplot(df, ggplot2::aes(x, value = value)) +
     geom_pictogram(
-      icon = icons::fontawesome$solid$square, n = 100, nrow = 10,
+      icon = shapes$square, n = 100, nrow = 10,
       show.legend = FALSE
     )
   expect_false(has_legend(hidden))
@@ -67,7 +67,7 @@ test_that("the value legend can be suppressed", {
 test_that("guide_pictogram() lets title/label/symbol_value/icon be overridden", {
   df <- data.frame(x = "a", value = 37)
   p <- ggplot2::ggplot(df, ggplot2::aes(x, value = value)) +
-    geom_pictogram(icon = icons::fontawesome$solid$square, n = 100, nrow = 10) +
+    geom_pictogram(icon = shapes$square, n = 100, nrow = 10) +
     ggplot2::guides(value = guide_pictogram(
       title = "Meaning",
       label = "one percentage point",
@@ -87,11 +87,11 @@ test_that("a mapped icon falls back to a colour swatch, or an explicit override"
     ggplot2::aes(animal, value = count, icon = animal, colour = animal)
   ) +
     geom_pictogram(symbol_value = 5) +
-    scale_icon_manual(values = c(icons::fontawesome$solid$cat, icons::fontawesome$solid$dog))
+    scale_icon_manual(values = c(shapes$square, shapes$circle))
 
   # No single icon represents both categories - shouldn't error, and shouldn't need one.
   expect_no_error(grid::grid.draw(ggplot2::ggplotGrob(p)))
 
-  overridden <- p + ggplot2::guides(value = guide_pictogram(icon = icons::fontawesome$solid$paw))
+  overridden <- p + ggplot2::guides(value = guide_pictogram(icon = shapes$triangle))
   expect_no_error(grid::grid.draw(ggplot2::ggplotGrob(overridden)))
 })

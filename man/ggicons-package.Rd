@@ -6,7 +6,7 @@
 \alias{ggicons-package}
 \title{ggicons: Icon Geometries for 'ggplot2'}
 \description{
-Provides icon geometries for 'ggplot2', using vector icon sets from the 'icons' package. geom_icon() draws an icon per row in place of a point, styled with the usual colour, size, alpha and angle aesthetics. Icon data is passed straight through with scale_icon_identity(), or mapped from discrete values with scale_icon_manual(). Icons also appear in legend keys, as fixed-position markers with annotation_icon(), and as axis, strip and legend labels via the element_icon() theme element.
+Provides icon geometries for 'ggplot2', using vector icon sets from the 'icons' package. geom_icon() draws an icon per row in place of a point, styled with the usual colour, size, alpha and angle aesthetics. Icon data is passed straight through with scale_icon_identity(), or mapped from discrete values with scale_icon_manual(). Icons also appear in legend keys, as fixed-position markers with annotation_icon(), and as axis, strip and legend labels via the element_icon() theme element. geom_pictogram() draws isotype-style unit charts, waffle/percentage charts and rating widgets, encoding a value as a grid of repeated icons.
 }
 \seealso{
 Useful links:

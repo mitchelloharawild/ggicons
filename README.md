@@ -74,7 +74,9 @@ If the `icon` aesthetic is already mapped to icon values,
 `scale_icon_identity()` passes them through unchanged. To map a discrete
 data column (e.g. a category) to an icon instead, use
 `scale_icon_manual()`. There’s no automatic discrete palette for icons,
-so `values` is always required:
+so `values` is always required. Since icon vectors can’t be named,
+`values` is matched positionally against the sorted data levels by
+default; pass `limits` to match against a different order instead:
 
 ``` r
 df <- data.frame(
@@ -83,12 +85,18 @@ df <- data.frame(
 )
 ggplot(df, aes(x, y, icon = type, colour = type)) +
   geom_icon(size = 12) +
-  scale_icon_manual(values = c(
-    fontawesome$solid$rocket,
-    fontawesome$solid$star,
-    fontawesome$solid$heart
-  )) +
-  scale_colour_manual(values = c("steelblue", "goldenrod", "firebrick"))
+  scale_icon_manual(
+    limits = c("rocket", "star", "heart"),
+    values = c(
+      fontawesome$solid$rocket,
+      fontawesome$solid$star,
+      fontawesome$solid$heart
+    )
+  ) +
+  scale_colour_manual(
+    limits = c("rocket", "star", "heart"),
+    values = c(rocket = "steelblue", star = "goldenrod", heart = "firebrick")
+  )
 ```
 
 <img src="man/figures/README-scale-icon-manual-1.png" alt="" width="100%" />

@@ -1,11 +1,11 @@
-battery <- list(
-  `4` = icons::fontawesome$solid$`battery-quarter`,
-  `6` = icons::fontawesome$solid$`battery-half`,
-  `8` = icons::fontawesome$solid$`battery-full`
+cyl_icons <- list(
+  `4` = shapes$circle,
+  `6` = shapes$square,
+  `8` = shapes$triangle
 )
 
 test_that("element_icon() constructs an element_text-derived object", {
-  el <- element_icon(icons = battery, size = 12)
+  el <- element_icon(icons = cyl_icons, size = 12)
 
   # Elements are S7 objects with extra class entries, so check with inherits() and
   # confirm element_icon is the most derived class for S3 dispatch.
@@ -22,7 +22,7 @@ test_that("element_icon(icons = NULL) is a legal degenerate case", {
 })
 
 test_that("element_icon() validates the icons lookup", {
-  expect_error(element_icon(icons = unname(battery)), "named")
+  expect_error(element_icon(icons = unname(cyl_icons)), "named")
   expect_error(element_icon(icons = c(a = 1, b = 2)), "named")
   expect_error(element_icon(icons = list(a = "not-an-icon")), "icon")
 })
@@ -30,7 +30,7 @@ test_that("element_icon() validates the icons lookup", {
 test_that("theme(axis.text.x = element_icon()) builds and draws when labels match", {
   p <- ggplot2::ggplot(mtcars, ggplot2::aes(factor(cyl), mpg)) +
     ggplot2::geom_boxplot() +
-    ggplot2::theme(axis.text.x = element_icon(icons = battery, size = 12))
+    ggplot2::theme(axis.text.x = element_icon(icons = cyl_icons, size = 12))
 
   expect_no_error(ggplot2::ggplot_build(p))
   expect_no_error(grid::grid.draw(ggplot2::ggplotGrob(p)))
@@ -38,7 +38,7 @@ test_that("theme(axis.text.x = element_icon()) builds and draws when labels matc
 
 test_that("theme(axis.text.x = element_icon()) falls back to text for unmatched labels", {
   # Only two of the three cyl levels are in the lookup; the unmatched one falls back to text.
-  partial <- battery[c("4", "6")]
+  partial <- cyl_icons[c("4", "6")]
   p <- ggplot2::ggplot(mtcars, ggplot2::aes(factor(cyl), mpg)) +
     ggplot2::geom_boxplot() +
     ggplot2::theme(axis.text.x = element_icon(icons = partial, size = 12))
@@ -50,7 +50,7 @@ test_that("theme(axis.text.x = element_icon()) falls back to text for unmatched 
 test_that("theme(axis.text.x = element_icon()) falls back to text entirely when no labels match", {
   p <- ggplot2::ggplot(mtcars, ggplot2::aes(factor(am), mpg)) +
     ggplot2::geom_boxplot() +
-    ggplot2::theme(axis.text.x = element_icon(icons = battery, size = 12))
+    ggplot2::theme(axis.text.x = element_icon(icons = cyl_icons, size = 12))
 
   expect_no_error(ggplot2::ggplot_build(p))
   expect_no_error(grid::grid.draw(ggplot2::ggplotGrob(p)))
@@ -69,7 +69,7 @@ test_that("theme(strip.text = element_icon()) builds and draws", {
   p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
     ggplot2::geom_point() +
     ggplot2::facet_wrap(~cyl) +
-    ggplot2::theme(strip.text = element_icon(icons = battery, size = 12))
+    ggplot2::theme(strip.text = element_icon(icons = cyl_icons, size = 12))
 
   expect_no_error(ggplot2::ggplot_build(p))
   expect_no_error(grid::grid.draw(ggplot2::ggplotGrob(p)))
@@ -80,7 +80,7 @@ test_that("theme(legend.text = element_icon()) builds and draws", {
   df$cyl <- factor(df$cyl)
   p <- ggplot2::ggplot(df, ggplot2::aes(wt, mpg, colour = cyl)) +
     ggplot2::geom_point() +
-    ggplot2::theme(legend.text = element_icon(icons = battery, size = 12))
+    ggplot2::theme(legend.text = element_icon(icons = cyl_icons, size = 12))
 
   expect_no_error(ggplot2::ggplot_build(p))
   expect_no_error(grid::grid.draw(ggplot2::ggplotGrob(p)))
@@ -90,7 +90,7 @@ test_that("coord_flip() with element_icon() on axis.text.y builds and draws", {
   p <- ggplot2::ggplot(mtcars, ggplot2::aes(factor(cyl), mpg)) +
     ggplot2::geom_boxplot() +
     ggplot2::coord_flip() +
-    ggplot2::theme(axis.text.y = element_icon(icons = battery, size = 12))
+    ggplot2::theme(axis.text.y = element_icon(icons = cyl_icons, size = 12))
 
   expect_no_error(ggplot2::ggplot_build(p))
   expect_no_error(grid::grid.draw(ggplot2::ggplotGrob(p)))
@@ -99,7 +99,7 @@ test_that("coord_flip() with element_icon() on axis.text.y builds and draws", {
 test_that("element_grob.element_icon() returns a grob for icon and text labels alike", {
   # calc_element() resolves hjust/vjust/margin defaults from the theme hierarchy before element_grob() runs.
   th <- ggplot2::theme_grey() +
-    ggplot2::theme(axis.text.x = element_icon(icons = battery, size = 12))
+    ggplot2::theme(axis.text.x = element_icon(icons = cyl_icons, size = 12))
   el <- ggplot2::calc_element("axis.text.x", th)
 
   g <- ggplot2::element_grob(el, label = c("4", "8", "not-in-lookup"), x = c(0.2, 0.5, 0.8))
@@ -108,7 +108,7 @@ test_that("element_grob.element_icon() returns a grob for icon and text labels a
 
 test_that("element_grob.element_icon() returns a nullGrob for an empty label vector", {
   th <- ggplot2::theme_grey() +
-    ggplot2::theme(axis.text.x = element_icon(icons = battery, size = 12))
+    ggplot2::theme(axis.text.x = element_icon(icons = cyl_icons, size = 12))
   el <- ggplot2::calc_element("axis.text.x", th)
 
   g <- ggplot2::element_grob(el, label = character(0))
@@ -131,7 +131,7 @@ test_that("element_icon()'s hjust/vjust/margin/angle position the icon like elem
   grid::grid.newpage()
   grid::pushViewport(grid::viewport(width = grid::unit(4, "in"), height = grid::unit(4, "in")))
 
-  path <- icons::icon_path(icons::fontawesome$solid$rocket)[[1]]
+  path <- icons::icon_path(shapes$triangle)[[1]]
 
   mean_xy <- function(hjust = 0.5, vjust = 0.5, angle = 0, margin = NULL,
                        margin_x = FALSE, margin_y = FALSE) {

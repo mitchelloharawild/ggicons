@@ -57,6 +57,20 @@ check_icon_lookup <- function(icons, call = rlang::caller_env()) {
 #' @examples
 #' library(ggplot2)
 #'
+#' # bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same
+#' shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
+#' cyl_icons <- list(
+#'   `4` = shapes$circle,
+#'   `6` = shapes$square,
+#'   `8` = shapes$triangle
+#' )
+#'
+#' ggplot(mtcars, aes(factor(cyl), mpg)) +
+#'   geom_boxplot() +
+#'   theme(axis.text.x = element_icon(icons = cyl_icons, size = 14))
+#'
+#' @examplesIf icons::icon_installed(icons::fontawesome)
+#' # a real icon pack (here, Font Awesome) works the same way
 #' battery <- list(
 #'   `4` = icons::fontawesome$solid$`battery-quarter`,
 #'   `6` = icons::fontawesome$solid$`battery-half`,

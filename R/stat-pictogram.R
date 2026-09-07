@@ -51,11 +51,23 @@
 #' @param flow Fill order: `"row"` (default) fills left-to-right then wraps
 #'   to the next row; `"col"` fills top-to-bottom then wraps to the next
 #'   column.
+#' @param geom Override the default connection between `stat_pictogram()` and
+#'   [geom_pictogram()]. For more information about overriding these
+#'   connections, see [ggplot2::layer()].
 #' @inheritParams ggplot2::stat_count
 #'
 #' @return A ggplot2 layer.
 #' @seealso [geom_pictogram()]
 #' @export
+#' @examples
+#' library(ggplot2)
+#'
+#' # bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same
+#' shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
+#'
+#' # only needed directly when pairing with a different geom
+#' ggplot(NULL, aes(x = "Proportion", value = 37)) +
+#'   stat_pictogram(geom = "pictogram", icon = shapes$square, n = 100, nrow = 10)
 stat_pictogram <- function(
   mapping = NULL,
   data = NULL,

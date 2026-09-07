@@ -78,12 +78,13 @@ framed ones.
 
 \examples{
 library(ggplot2)
-library(icons)
 
+# bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same
+shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
 ggplot(data.frame(x = 1:3, y = c(1, 3, 2)), aes(x, y)) +
   geom_point() +
   annotation_icon(
-    icon = fontawesome$solid$rocket,
+    icon = shapes$star,
     x = 2, y = 3, size = 12, colour = "steelblue"
   )
 }

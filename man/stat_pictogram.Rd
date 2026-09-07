@@ -43,6 +43,10 @@ the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
+\item{geom}{Override the default connection between \code{stat_pictogram()} and
+\code{\link[=geom_pictogram]{geom_pictogram()}}. For more information about overriding these
+connections, see \code{\link[ggplot2:layer]{ggplot2::layer()}}.}
+
 \item{position}{A position adjustment to use on the data for this layer. This
 can be used in various ways, including to prevent overplotting and
 improving the display. The \code{position} argument accepts the following:
@@ -165,6 +169,16 @@ one growing column per category, up from the bottom of the panel;
 right from the left of the panel.
 }
 
+\examples{
+library(ggplot2)
+
+# bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same
+shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
+
+# only needed directly when pairing with a different geom
+ggplot(NULL, aes(x = "Proportion", value = 37)) +
+  stat_pictogram(geom = "pictogram", icon = shapes$square, n = 100, nrow = 10)
+}
 \seealso{
 \code{\link[=geom_pictogram]{geom_pictogram()}}
 }

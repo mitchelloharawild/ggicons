@@ -47,6 +47,20 @@ label to replace:
 \examples{
 library(ggplot2)
 
+# bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same
+shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
+cyl_icons <- list(
+  `4` = shapes$circle,
+  `6` = shapes$square,
+  `8` = shapes$triangle
+)
+
+ggplot(mtcars, aes(factor(cyl), mpg)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_icon(icons = cyl_icons, size = 14))
+
+\dontshow{if (icons::icon_installed(icons::fontawesome)) withAutoprint(\{ # examplesIf}
+# a real icon pack (here, Font Awesome) works the same way
 battery <- list(
   `4` = icons::fontawesome$solid$`battery-quarter`,
   `6` = icons::fontawesome$solid$`battery-half`,
@@ -56,6 +70,7 @@ battery <- list(
 ggplot(mtcars, aes(factor(cyl), mpg)) +
   geom_boxplot() +
   theme(axis.text.x = element_icon(icons = battery, size = 14))
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=geom_icon]{geom_icon()}}

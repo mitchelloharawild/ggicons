@@ -160,15 +160,12 @@ Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
 
 \examples{
 library(ggplot2)
-library(icons)
 
+# bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same
+shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
 df <- data.frame(
   x = 1:3, y = c(1, 3, 2),
-  icon = c(
-    fontawesome$solid$rocket,
-    fontawesome$solid$star,
-    fontawesome$solid$heart
-  )
+  icon = c(shapes$square, shapes$circle, shapes$triangle)
 )
 ggplot(df, aes(x, y, icon = icon)) +
   geom_icon(size = 10, colour = "steelblue")

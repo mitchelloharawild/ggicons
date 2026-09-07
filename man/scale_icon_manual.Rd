@@ -65,7 +65,8 @@ notation.
 length as the number of levels to map. Unlike most \verb{scale_*_manual()}
 counterparts, \code{values} can't be named by level, since icon vectors don't
 support names, so it's matched positionally against the sorted data
-levels; use \code{breaks} to map against a different order.}
+levels; pass \code{limits} to map against a different order (\code{breaks} only
+controls the legend, not this matching).}
 
 \item{breaks}{One of:
 \itemize{
@@ -89,19 +90,16 @@ discrete palette for icons, so \code{values} is required.
 }
 \examples{
 library(ggplot2)
-library(icons)
 
+# bundled placeholder shapes; a real pack (e.g. icons::fontawesome) works the same
+shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
 df <- data.frame(
   x = 1:3, y = c(1, 3, 2),
   type = c("a", "b", "c")
 )
 ggplot(df, aes(x, y, icon = type)) +
   geom_icon(size = 10) +
-  scale_icon_manual(values = c(
-    fontawesome$solid$rocket,
-    fontawesome$solid$star,
-    fontawesome$solid$heart
-  ))
+  scale_icon_manual(values = c(shapes$square, shapes$circle, shapes$triangle))
 }
 \seealso{
 \code{\link[=scale_icon_identity]{scale_icon_identity()}}

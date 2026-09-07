@@ -34,13 +34,13 @@ test_that("symbol_value defaults to 1 in fixed-grid mode, even for large values"
 
   by_n <- ggplot2::ggplot_build(
     ggplot2::ggplot(df, ggplot2::aes(x, value = value)) +
-      geom_pictogram(icon = icons::fontawesome$solid$square, n = 100)
+      geom_pictogram(icon = shapes$square, n = 100)
   )
   expect_identical(by_n$plot$layers[[1]]$computed_stat_params$symbol_value, 1)
 
   by_nrow_ncol <- ggplot2::ggplot_build(
     ggplot2::ggplot(df, ggplot2::aes(x, value = value)) +
-      geom_pictogram(icon = icons::fontawesome$solid$square, nrow = 10, ncol = 10)
+      geom_pictogram(icon = shapes$square, nrow = 10, ncol = 10)
   )
   expect_identical(by_nrow_ncol$plot$layers[[1]]$computed_stat_params$symbol_value, 1)
 })
@@ -48,7 +48,7 @@ test_that("symbol_value defaults to 1 in fixed-grid mode, even for large values"
 test_that("symbol_value is auto-picked as a nice number in growing-grid mode", {
   df <- data.frame(animal = c("Cat", "Dog"), count = c(1230, 890))
   p <- ggplot2::ggplot(df, ggplot2::aes(animal, value = count)) +
-    geom_pictogram(icon = icons::fontawesome$solid$paw)
+    geom_pictogram(icon = shapes$circle)
 
   b <- ggplot2::ggplot_build(p)
   # target 20 icons for the largest value (1230): nice_ceiling(1230 / 20) == 100
@@ -61,13 +61,13 @@ test_that("n_target tunes how many icons the auto-picked symbol_value aims for",
 
   denser <- ggplot2::ggplot_build(
     ggplot2::ggplot(df, ggplot2::aes(x, value = value)) +
-      geom_pictogram(icon = icons::fontawesome$solid$square, n_target = 50)
+      geom_pictogram(icon = shapes$square, n_target = 50)
   )
   expect_identical(denser$plot$layers[[1]]$computed_stat_params$symbol_value, 50)
 
   coarser <- ggplot2::ggplot_build(
     ggplot2::ggplot(df, ggplot2::aes(x, value = value)) +
-      geom_pictogram(icon = icons::fontawesome$solid$square, n_target = 5)
+      geom_pictogram(icon = shapes$square, n_target = 5)
   )
   expect_identical(coarser$plot$layers[[1]]$computed_stat_params$symbol_value, 500)
 })
@@ -79,14 +79,14 @@ test_that("an explicitly fixed nrow/ncol scales the auto-picked target, not the 
   # nice_ceiling(1230 / 100) == 20, finer than the flat (target = 20) value of 100 above.
   by_ncol <- ggplot2::ggplot_build(
     ggplot2::ggplot(df, ggplot2::aes(x, value = value)) +
-      geom_pictogram(icon = icons::fontawesome$solid$square, ncol = 5)
+      geom_pictogram(icon = shapes$square, ncol = 5)
   )
   expect_identical(by_ncol$plot$layers[[1]]$computed_stat_params$symbol_value, 20)
 
   # nrow fixed instead: same reasoning, this time bounding the resulting ncol.
   by_nrow <- ggplot2::ggplot_build(
     ggplot2::ggplot(df, ggplot2::aes(x, value = value)) +
-      geom_pictogram(icon = icons::fontawesome$solid$square, nrow = 5)
+      geom_pictogram(icon = shapes$square, nrow = 5)
   )
   expect_identical(by_nrow$plot$layers[[1]]$computed_stat_params$symbol_value, 20)
 })
@@ -94,7 +94,7 @@ test_that("an explicitly fixed nrow/ncol scales the auto-picked target, not the 
 test_that("an explicit symbol_value always overrides auto-picking", {
   df <- data.frame(x = "a", value = 1230)
   p <- ggplot2::ggplot(df, ggplot2::aes(x, value = value)) +
-    geom_pictogram(icon = icons::fontawesome$solid$square, symbol_value = 7)
+    geom_pictogram(icon = shapes$square, symbol_value = 7)
 
   b <- ggplot2::ggplot_build(p)
   expect_identical(b$plot$layers[[1]]$computed_stat_params$symbol_value, 7)
