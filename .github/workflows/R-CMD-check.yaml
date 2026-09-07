@@ -27,6 +27,23 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
+      - name: Determine icon pack cache path
+        id: icon-cache
+        run: echo "path=$(Rscript -e 'cat(rappdirs::user_data_dir("rpkg_icon"))')" >> "$GITHUB_OUTPUT"
+
+      - name: Cache downloaded icon packs
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.icon-cache.outputs.path }}
+          key: icons-fontawesome-${{ runner.os }}
+
+      # Some examples/tests are gated behind icons::icon_installed(icons::fontawesome)
+      # (@examplesIf / skip_if_not()) so they don't fail where Font Awesome hasn't been
+      # downloaded; fetch it here so the check actually exercises them.
+      - name: Download Font Awesome icon pack
+        run: |
+          Rscript -e 'if (!icons::icon_installed(icons::fontawesome)) icons::download_fontawesome()'
+
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true

@@ -36,6 +36,23 @@ jobs:
           extra-packages: any::pkgdown, local::.
           needs: website
 
+      - name: Determine icon pack cache path
+        id: icon-cache
+        run: echo "path=$(Rscript -e 'cat(rappdirs::user_data_dir("rpkg_icon"))')" >> "$GITHUB_OUTPUT"
+
+      - name: Cache downloaded icon packs
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.icon-cache.outputs.path }}
+          key: icons-fontawesome-${{ runner.os }}
+
+      # Some reference examples are gated behind icons::icon_installed(icons::fontawesome)
+      # (@examplesIf) so they don't fail where Font Awesome hasn't been downloaded; fetch it
+      # here so pkgdown's example run renders them on the site.
+      - name: Download Font Awesome icon pack
+        run: |
+          Rscript -e 'if (!icons::icon_installed(icons::fontawesome)) icons::download_fontawesome()'
+
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
