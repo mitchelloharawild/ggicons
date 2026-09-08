@@ -1,6 +1,6 @@
 # Changelog
 
-## ggicons (development version)
+## ggicons 0.1.0
 
 Initial CRAN submission.
 

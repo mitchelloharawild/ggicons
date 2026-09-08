@@ -11,13 +11,12 @@ Source:
 [`DESCRIPTION`](https://github.com/mitchelloharawild/ggicons/blob/main/DESCRIPTION)
 
 O'Hara-Wild M (2026). *ggicons: Icon Geometries for 'ggplot2'*. R
-package version 0.0.0.9000,
-<https://pkg.mitchelloharawild.com/ggicons/>.
+package version 0.1.0, <https://pkg.mitchelloharawild.com/ggicons/>.
 
     @Manual{,
       title = {ggicons: Icon Geometries for 'ggplot2'},
       author = {Mitchell O'Hara-Wild},
       year = {2026},
-      note = {R package version 0.0.0.9000},
+      note = {R package version 0.1.0},
       url = {https://pkg.mitchelloharawild.com/ggicons/},
     }
