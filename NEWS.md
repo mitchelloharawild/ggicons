@@ -1,3 +1,13 @@
+# ggicons (development version)
+
+* Icons with curved outlines (e.g. circles) no longer show faceted, polygonal
+  edges when rendered large. Curves are now kept as Bezier paths and only
+  flattened to a polyline at draw time, at a resolution adapted to the
+  icon's actual rendered size and the output device's resolution, instead of
+  a fixed low-resolution approximation baked in when the icon was first
+  parsed. `grImport2` is no longer a dependency; SVG path data is now parsed
+  directly (via `xml2`).
+
 # ggicons 0.1.0
 
 Initial CRAN submission.
