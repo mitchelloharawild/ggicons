@@ -291,24 +291,37 @@ shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
 # 10x10 waffle: 37%
 ggplot(NULL, aes(x = "Proportion", value = 37)) +
   geom_pictogram(icon = shapes$square, n = 100, nrow = 10)
-
+#> Error in geom_pictogram(icon = shapes$square, n = 100, nrow = 10): Problem while converting geom to grob.
+#> ℹ Error occurred in the 1st layer.
+#> Caused by error in `loadNamespace()`:
+#> ! there is no package called ‘grImport2’
 
 # single-row rating: 5 slots, 3 filled, legend switched off
 ggplot(NULL, aes(y = "Rating", value = 3)) +
   geom_pictogram(icon = shapes$star, n = 5, colour = "goldenrod") +
   guides(value = "none")
-
+#> Error in geom_pictogram(icon = shapes$star, n = 5, colour = "goldenrod"): Problem while converting geom to grob.
+#> ℹ Error occurred in the 1st layer.
+#> Caused by error in `loadNamespace()`:
+#> ! there is no package called ‘grImport2’
 
 # growing isotype chart: two categories, each sized to its own value
 pets <- data.frame(animal = c("Cat", "Dog"), count = c(23, 15))
 ggplot(pets, aes(animal, y = "Pet", value = count, icon = animal, colour = animal)) +
   geom_pictogram(nrow = 5) +
   scale_icon_manual(values = c(icons::fontawesome$solid$cat, icons::fontawesome$solid$dog))
-
+#> Error in geom_pictogram(nrow = 5): Problem while converting geom to grob.
+#> ℹ Error occurred in the 1st layer.
+#> Caused by error in `loadNamespace()`:
+#> ! there is no package called ‘grImport2’
 # column chart: no y aesthetic, so icons fill like a column geometry
 commutes <- data.frame(mode = c("Bicycle", "Car"), count = c(890, 1230))
 ggplot(commutes, aes(mode, value = count, icon = mode, colour = mode)) +
   geom_pictogram(ncol = 5) +
   scale_icon_manual(values = c(icons::fontawesome$solid$bicycle, icons::fontawesome$solid$car)) +
   labs(value = "commuters")
+#> Error in geom_pictogram(ncol = 5): Problem while converting geom to grob.
+#> ℹ Error occurred in the 1st layer.
+#> Caused by error in `loadNamespace()`:
+#> ! there is no package called ‘grImport2’
 ```

@@ -120,4 +120,8 @@ ggplot(data.frame(x = 1:3, y = c(1, 3, 2)), aes(x, y)) +
     icon = shapes$star,
     x = 2, y = 3, size = 12, colour = "steelblue"
   )
+#> Error in annotation_icon(icon = shapes$star, x = 2, y = 3, size = 12,     colour = "steelblue"): Problem while converting geom to grob.
+#> ℹ Error occurred in the 2nd layer.
+#> Caused by error in `loadNamespace()`:
+#> ! there is no package called ‘grImport2’
 ```

@@ -121,7 +121,10 @@ shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
 ggplot(NULL, aes(x = "Proportion", value = 37)) +
   geom_pictogram(icon = shapes$square, n = 100, nrow = 10) +
   labs(value = "%")
-
+#> Error in geom_pictogram(icon = shapes$square, n = 100, nrow = 10): Problem while converting geom to grob.
+#> ℹ Error occurred in the 1st layer.
+#> Caused by error in `loadNamespace()`:
+#> ! there is no package called ‘grImport2’
 
 # a unit chart where each icon is worth 5: the legend spells that out
 pets <- data.frame(animal = c("Cat", "Dog"), count = c(23, 15))
@@ -129,4 +132,8 @@ ggplot(pets, aes(animal, value = count, icon = animal, colour = animal)) +
   geom_pictogram(symbol_value = 5) +
   scale_icon_manual(values = c(icons::fontawesome$solid$cat, icons::fontawesome$solid$dog)) +
   labs(value = "pets")
+#> Error in geom_pictogram(symbol_value = 5): Problem while converting geom to grob.
+#> ℹ Error occurred in the 1st layer.
+#> Caused by error in `loadNamespace()`:
+#> ! there is no package called ‘grImport2’
 ```

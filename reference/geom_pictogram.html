@@ -15,7 +15,7 @@ growing isotype-style unit chart, depending on the grid arguments
 
     <a class="navbar-brand me-2" href="../index.html">ggicons</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,7 +37,7 @@ growing isotype-style unit chart, depending on the grid arguments
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Pictograms</h1>
-      <small class="dont-index">Source: <a href="https://github.com/mitchelloharawild/ggicons/blob/v0.1.0/R/geom-pictogram.R" class="external-link"><code>R/geom-pictogram.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/mitchelloharawild/ggicons/blob/main/R/geom-pictogram.R" class="external-link"><code>R/geom-pictogram.R</code></a></small>
       <div class="d-none name"><code>geom_pictogram.Rd</code></div>
     </div>
 
@@ -277,27 +277,39 @@ spelling that ratio out; turn it off with <code>guides(value = "none")</code>.</
 <span class="r-in"><span><span class="co"># 10x10 waffle: 37%</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Proportion"</span>, value <span class="op">=</span> <span class="fl">37</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">geom_pictogram</span><span class="op">(</span>icon <span class="op">=</span> <span class="va">shapes</span><span class="op">$</span><span class="va">square</span>, n <span class="op">=</span> <span class="fl">100</span>, nrow <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="geom_pictogram-1.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in geom_pictogram(icon = shapes$square, n = 100, nrow = 10):</span> Problem while converting geom to grob.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Error occurred in the 1st layer.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `loadNamespace()`:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> there is no package called ‘grImport2’</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># single-row rating: 5 slots, 3 filled, legend switched off</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Rating"</span>, value <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">geom_pictogram</span><span class="op">(</span>icon <span class="op">=</span> <span class="va">shapes</span><span class="op">$</span><span class="va">star</span>, n <span class="op">=</span> <span class="fl">5</span>, colour <span class="op">=</span> <span class="st">"goldenrod"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>value <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="geom_pictogram-2.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in geom_pictogram(icon = shapes$star, n = 5, colour = "goldenrod"):</span> Problem while converting geom to grob.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Error occurred in the 1st layer.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `loadNamespace()`:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> there is no package called ‘grImport2’</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># growing isotype chart: two categories, each sized to its own value</span></span></span>
 <span class="r-in"><span><span class="va">pets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>animal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cat"</span>, <span class="st">"Dog"</span><span class="op">)</span>, count <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">23</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">pets</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">animal</span>, y <span class="op">=</span> <span class="st">"Pet"</span>, value <span class="op">=</span> <span class="va">count</span>, icon <span class="op">=</span> <span class="va">animal</span>, colour <span class="op">=</span> <span class="va">animal</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">geom_pictogram</span><span class="op">(</span>nrow <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="scale_icon_manual.html">scale_icon_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">icons</span><span class="fu">::</span><span class="va"><a href="https://pkg.mitchelloharawild.com/icons/reference/fontawesome.html" class="external-link">fontawesome</a></span><span class="op">$</span><span class="va">solid</span><span class="op">$</span><span class="va">cat</span>, <span class="fu">icons</span><span class="fu">::</span><span class="va"><a href="https://pkg.mitchelloharawild.com/icons/reference/fontawesome.html" class="external-link">fontawesome</a></span><span class="op">$</span><span class="va">solid</span><span class="op">$</span><span class="va">dog</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="geom_pictogram-3.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in geom_pictogram(nrow = 5):</span> Problem while converting geom to grob.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Error occurred in the 1st layer.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `loadNamespace()`:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> there is no package called ‘grImport2’</span>
 <span class="r-in"><span><span class="co"># column chart: no y aesthetic, so icons fill like a column geometry</span></span></span>
 <span class="r-in"><span><span class="va">commutes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Bicycle"</span>, <span class="st">"Car"</span><span class="op">)</span>, count <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">890</span>, <span class="fl">1230</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">commutes</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">mode</span>, value <span class="op">=</span> <span class="va">count</span>, icon <span class="op">=</span> <span class="va">mode</span>, colour <span class="op">=</span> <span class="va">mode</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">geom_pictogram</span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="scale_icon_manual.html">scale_icon_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">icons</span><span class="fu">::</span><span class="va"><a href="https://pkg.mitchelloharawild.com/icons/reference/fontawesome.html" class="external-link">fontawesome</a></span><span class="op">$</span><span class="va">solid</span><span class="op">$</span><span class="va">bicycle</span>, <span class="fu">icons</span><span class="fu">::</span><span class="va"><a href="https://pkg.mitchelloharawild.com/icons/reference/fontawesome.html" class="external-link">fontawesome</a></span><span class="op">$</span><span class="va">solid</span><span class="op">$</span><span class="va">car</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>value <span class="op">=</span> <span class="st">"commuters"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="geom_pictogram-4.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in geom_pictogram(ncol = 5):</span> Problem while converting geom to grob.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Error occurred in the 1st layer.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `loadNamespace()`:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> there is no package called ‘grImport2’</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

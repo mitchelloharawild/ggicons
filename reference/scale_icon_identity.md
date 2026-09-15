@@ -74,4 +74,8 @@ df <- data.frame(
 ggplot(df, aes(x, y, icon = icon)) +
   geom_icon(size = 10) +
   scale_icon_identity()
+#> Error in geom_icon(size = 10): Problem while converting geom to grob.
+#> ℹ Error occurred in the 1st layer.
+#> Caused by error in `loadNamespace()`:
+#> ! there is no package called ‘grImport2’
 ```

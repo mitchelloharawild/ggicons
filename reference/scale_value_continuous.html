@@ -15,7 +15,7 @@ palette is the identity function."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">ggicons</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,7 +37,7 @@ palette is the identity function."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Continuous scale for the pictogram value aesthetic</h1>
-      <small class="dont-index">Source: <a href="https://github.com/mitchelloharawild/ggicons/blob/v0.1.0/R/scale-value.R" class="external-link"><code>R/scale-value.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/mitchelloharawild/ggicons/blob/main/R/scale-value.R" class="external-link"><code>R/scale-value.R</code></a></small>
       <div class="d-none name"><code>scale_value_continuous.Rd</code></div>
     </div>
 
@@ -178,7 +178,10 @@ to call it directly. Exported for overriding <code>guide</code> or setting expli
 <span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Proportion"</span>, value <span class="op">=</span> <span class="fl">37</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="geom_pictogram.html">geom_pictogram</a></span><span class="op">(</span>icon <span class="op">=</span> <span class="va">shapes</span><span class="op">$</span><span class="va">square</span>, n <span class="op">=</span> <span class="fl">100</span>, nrow <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu">scale_value_continuous</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="scale_value_continuous-1.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in geom_pictogram(icon = shapes$square, n = 100, nrow = 10):</span> Problem while converting geom to grob.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Error occurred in the 1st layer.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `loadNamespace()`:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> there is no package called ‘grImport2’</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

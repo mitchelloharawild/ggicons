@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggicons</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,9 +29,13 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/mitchelloharawild/ggicons/blob/v0.1.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/mitchelloharawild/ggicons/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="development version" id="ggicons-development-version">ggicons (development version)<a class="anchor" aria-label="anchor" href="#ggicons-development-version"></a></h2>
+<ul><li>Icons with curved outlines (e.g. circles) no longer show faceted, polygonal edges when rendered large. Curves are now kept as Bezier paths and only flattened to a polyline at draw time, at a resolution adapted to the icon’s actual rendered size and the output device’s resolution, instead of a fixed low-resolution approximation baked in when the icon was first parsed. <code>grImport2</code> is no longer a dependency; SVG path data is now parsed directly (via <code>xml2</code>).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="ggicons-010">ggicons 0.1.0<a class="anchor" aria-label="anchor" href="#ggicons-010"></a></h2>
 <p>Initial CRAN submission.</p>
@@ -43,7 +47,8 @@
 <li>Added <code><a href="../reference/geom_pictogram.html">geom_pictogram()</a></code> and <code><a href="../reference/stat_pictogram.html">stat_pictogram()</a></code>, for isotype-style unit charts, waffle/percentage charts and rating widgets: a <code>value</code> is turned into a grid of repeated icons, some fraction of them filled in. The grid can be fixed-size (a waffle chart) or grow with <code>value</code> (an isotype chart), and reads as a bar/column chart when <code>x</code> or <code>y</code> is left unmapped.</li>
 <li>Added <code><a href="../reference/guide_pictogram.html">guide_pictogram()</a></code> and <code><a href="../reference/scale_value_continuous.html">scale_value_continuous()</a></code>, which together give <code><a href="../reference/geom_pictogram.html">geom_pictogram()</a></code>’s <code>value</code> aesthetic a default legend spelling out the amount one icon represents (e.g. “= 1000”).</li>
 </ul></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

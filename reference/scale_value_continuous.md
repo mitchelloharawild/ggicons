@@ -176,4 +176,8 @@ shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
 ggplot(NULL, aes(x = "Proportion", value = 37)) +
   geom_pictogram(icon = shapes$square, n = 100, nrow = 10) +
   scale_value_continuous(name = "%")
+#> Error in geom_pictogram(icon = shapes$square, n = 100, nrow = 10): Problem while converting geom to grob.
+#> ℹ Error occurred in the 1st layer.
+#> Caused by error in `loadNamespace()`:
+#> ! there is no package called ‘grImport2’
 ```

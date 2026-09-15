@@ -81,7 +81,7 @@ cyl_icons <- list(
 ggplot(mtcars, aes(factor(cyl), mpg)) +
   geom_boxplot() +
   theme(axis.text.x = element_icon(icons = cyl_icons, size = 14))
-
+#> Error in loadNamespace(x): there is no package called ‘grImport2’
 
 # a real icon pack (here, Font Awesome) works the same way
 battery <- list(
@@ -93,4 +93,5 @@ battery <- list(
 ggplot(mtcars, aes(factor(cyl), mpg)) +
   geom_boxplot() +
   theme(axis.text.x = element_icon(icons = battery, size = 14))
+#> Error in loadNamespace(x): there is no package called ‘grImport2’
 ```

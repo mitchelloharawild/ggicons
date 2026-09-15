@@ -223,4 +223,8 @@ shapes <- icons::icon_set(system.file("icons", package = "ggicons"))
 # only needed directly when pairing with a different geom
 ggplot(NULL, aes(x = "Proportion", value = 37)) +
   stat_pictogram(geom = "pictogram", icon = shapes$square, n = 100, nrow = 10)
+#> Error in stat_pictogram(geom = "pictogram", icon = shapes$square, n = 100,     nrow = 10): Problem while converting geom to grob.
+#> ℹ Error occurred in the 1st layer.
+#> Caused by error in `loadNamespace()`:
+#> ! there is no package called ‘grImport2’
 ```
